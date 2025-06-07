@@ -1,219 +1,389 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ฝากปริ้นงานกับ TonoX2</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Kanit', sans-serif;
-      background-color: #f5f5f5;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ฝากไฟล์ปริ้น - TonoX2Shop</title>
+<link rel="icon" href="favicon.png" />
+<!-- ฟอนต์ Kanit จาก Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet" />
+<style>
+  /* ฟอนต์และพื้นฐาน */
+  body, input, select, button, textarea, label {
+    font-family: 'Kanit', sans-serif;
+  }
+  body {
+    margin: 0; padding: 0;
+    background: linear-gradient(270deg, #3a0ca3, #720026, #3a0ca3);
+    background-size: 600% 600%;
+    animation: bgmove 15s ease infinite;
+    color: #eee;
+  }
+  @keyframes bgmove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
 
-    header {
-      background: url('images/printer_banner.jpg') no-repeat center center;
-      background-size: cover;
-      height: 250px;
-    }
+  /* เมนูบนซ้าย */
+  #menu-home {
+    position: fixed;
+    top: 15px; left: 15px;
+    background: rgba(255 255 255 / 0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center;
+    gap: 6px;
+    transition: background-color 0.3s;
+  }
+  #menu-home:hover {
+    background: rgba(255 255 255 / 0.25);
+  }
+  #menu-home img {
+    width: 24px; height: 24px;
+  }
+  #menu-home span {
+    font-weight: 600;
+    color: #eee;
+  }
 
-    main {
-      padding: 2em;
-      max-width: 600px;
-      margin: auto;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
+  /* ส่วนหัวรูปเครื่องปริ้น */
+  header {
+    width: 100%;
+    height: 180px;
+    background: url('images/free_Code.jpg') center center/cover no-repeat;
+    filter: drop-shadow(0 0 8px rgba(255 255 255 0.2));
+    box-shadow: inset 0 0 30px rgba(255 255 255, 0.15);
+  }
 
-    h2 {
-      text-align: center;
-      color: #4B0082;
-    }
+  /* ฟอร์ม */
+  main {
+    max-width: 600px;
+    background: rgba(0,0,0,0.5);
+    margin: 20px auto 50px;
+    padding: 30px 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 25px #5b3db2aa;
+  }
 
-    label {
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
-    }
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #f0e8ff;
+    text-shadow: 1px 1px 4px #35004fbb;
+  }
 
-    input[type="text"],
-    input[type="number"],
-    select,
-    .file-drop {
-      width: 100%;
-      padding: 12px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-family: 'Kanit', sans-serif;
-      font-size: 1em;
-    }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
 
-    input[type="text"]::placeholder,
-    input[type="number"]::placeholder {
-      font-family: 'Kanit', sans-serif;
-    }
+  input[type="text"], select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1.5px solid #555;
+    background: #1a1425;
+    color: #eee;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin-bottom: 18px;
+    transition: border-color 0.3s;
+  }
+  input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: #7e57c2;
+    outline: none;
+  }
+  input::placeholder, textarea::placeholder {
+    font-family: 'Kanit', sans-serif;
+    color: #aaa;
+  }
 
-    .file-drop {
-      border: 2px dashed #6a0dad;
-      text-align: center;
-      color: #999;
-      cursor: pointer;
-    }
+  /* กล่องอัปโหลดไฟล์ใหญ่ รองรับลากไฟล์ */
+  #file-upload-container {
+    border: 2px dashed #8e7cc3;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    color: #ccc;
+    font-weight: 600;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    user-select: none;
+    position: relative;
+  }
+  #file-upload-container.dragover {
+    background-color: #6c4ab6cc;
+    border-color: #d1c4e9;
+    color: white;
+  }
+  #file-upload {
+    display: none;
+  }
 
-    .file-drop.dragover {
-      background-color: #f0f0ff;
-    }
+  /* แสดงชื่อไฟล์ที่เลือก */
+  #file-list {
+    margin-top: 8px;
+    color: #eee;
+    font-size: 14px;
+    text-align: left;
+    max-height: 90px;
+    overflow-y: auto;
+  }
 
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      margin-top: 20px;
-    }
+  /* แถวเลือกจำนวนแผ่นและชุด */
+  .inline-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 18px;
+  }
+  .inline-row > div {
+    flex: 1;
+  }
 
-    .checkbox-row input[type="checkbox"] {
-      margin-right: 10px;
-      transform: scale(1.3);
-    }
+  /* ช่องเตือนสีแดง */
+  .error-message {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: -12px;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
 
-    .error-message {
-      color: red;
-      font-size: 0.9em;
-      margin-top: 5px;
-    }
+  /* ราคาใต้เลือกหมึก */
+  #price-info {
+    color: #ddd;
+    font-size: 13px;
+    margin-top: -10px;
+    margin-bottom: 18px;
+    font-weight: 500;
+    text-align: center;
+    user-select: none;
+  }
 
-    button {
-      width: 100%;
-      padding: 15px;
-      margin-top: 20px;
-      font-size: 1.1em;
-      font-family: 'Kanit', sans-serif;
-      background: linear-gradient(to right, #4B0082, #0000CD);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+  /* Checkbox และข้อความให้อยู่บรรทัดเดียว */
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 25px;
+    color: #eee;
+    font-weight: 600;
+    user-select: none;
+  }
+  .checkbox-group input[type="checkbox"] {
+    margin-left: 0;
+    margin-right: 4px;
+    transform: scale(1.25);
+    cursor: pointer;
+  }
 
-    button:hover {
-      background: linear-gradient(to right, #0000CD, #4B0082);
-    }
-  </style>
+  /* ปุ่มส่ง */
+  button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(45deg, #7e57c2, #4527a0);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #7e57c2cc;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  button[type="submit"]:hover {
+    background: linear-gradient(45deg, #5e35b1, #311b92);
+    box-shadow: 0 0 25px #5e35b1dd;
+  }
+
+</style>
 </head>
 <body>
-  <header></header>
-  <main>
-    <h2>ฝากปริ้นงานกับเรา</h2>
-    <form id="printForm" onsubmit="return validateForm()" enctype="multipart/form-data">
-      <label>* ไฟล์ (PDF, PNG, JPG, JPEG, DOCX)</label>
-      <div id="fileDrop" class="file-drop">ลากไฟล์หรือคลิกเพื่อเลือก</div>
-      <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.docx" style="display:none"/>
-      <div id="fileError" class="error-message"></div>
 
-      <label for="name">* ชื่อ-นามสกุล</label>
-      <input type="text" id="name" name="name" placeholder="กรุณากรอกชื่อ-นามสกุล" />
-      <div id="nameError" class="error-message"></div>
+<!-- เมนูบ้านบนซ้าย -->
+<div id="menu-home" onclick="location.href='index.html'">
+  <img src="images/home_icon.png" alt="Home" />
+  <span>หน้าหลัก</span>
+</div>
 
-      <label for="pages">* จำนวนแผ่น</label>
-      <input type="number" id="pages" name="pages" placeholder="0" min="1"/>
-      <div id="pagesError" class="error-message"></div>
+<header></header>
 
-      <label for="sets">* จำนวนชุด</label>
-      <input type="number" id="sets" name="sets" value="1" min="1"/>
-      <div id="setsError" class="error-message"></div>
+<main>
+  <h1>ฝากไฟล์ปริ้น</h1>
 
-      <label for="color">* ประเภทการพิมพ์</label>
-      <select id="color" name="color">
-        <option value="">-- เลือก --</option>
-        <option value="สี">สี (10 บาท/แผ่น)</option>
-        <option value="ขาวดำ">ขาวดำ (5 บาท/แผ่น)</option>
-      </select>
-      <div id="colorError" class="error-message"></div>
+  <form id="printer-form" action="https://getform.io/f/bqomeydb" method="POST" enctype="multipart/form-data" novalidate>
+<input type="hidden" name="_redirect" value="https://tonox2dev.github.io/thank_you.html">
 
-      <label for="total">จำนวนเงินที่ต้องจ่าย (บาท)</label>
-      <input type="text" id="total" name="total" readonly />
+    <label for="fullname">ชื่อจริงเฟสบุ๊ค หรือลิงค์ profile*</label>
+    <input type="text" id="fullname" name="fullname" placeholder="ลิงค์ profile เช่น https://www.facebook.com/your.name" required />
+    <div class="error-message" id="error-fullname"></div>
 
-      <div class="checkbox-row">
-        <input type="checkbox" id="agree" />
-        <label for="agree">ฉันยินยอมให้ใช้ข้อมูลนี้เพื่อการปริ้น และจะชำระเงินภายในวันนี้</label>
+    <label for="file-upload-container">แนบไฟล์ (PDF, PNG, JPG, JPEG, DOCX) *<br><small>ลากหรือคลิกเพื่อเลือกไฟล์ได้หลายไฟล์</small></label>
+    <div id="file-upload-container">
+      <input type="file" id="file-upload" name="files[]" accept=".pdf,.png,.jpg,.jpeg,.docx" multiple required />
+      <div id="file-list">ยังไม่มีไฟล์ถูกเลือก</div>
+    </div>
+    <div class="error-message" id="error-files"></div>
+
+    <div class="inline-row">
+      <div>
+        <label for="pages">จำนวนแผ่น *</label>
+        <input type="text" id="pages" name="pages" min="1" placeholder="จำนวนแผ่น" required />
+        <div class="error-message" id="error-pages"></div>
       </div>
-      <div id="agreeError" class="error-message"></div>
+      <div>
+        <label for="sets">จำนวนชุด *</label>
+        <input type="text" id="sets" name="sets" min="1" value="1" required />
+        <div class="error-message" id="error-sets"></div>
+      </div>
+    </div>
 
-      <button type="submit">ยืนยัน</button>
-    </form>
-  </main>
+    <label for="color-type">ประเภทการพิมพ์ *</label>
+    <select id="color-type" name="color_type" required>
+      <option value="">-- กรุณาเลือก --</option>
+      <option value="bw">ขาวดำ (5 บาท/แผ่น)</option>
+      <option value="color">สี (10 บาท/แผ่น)</option>
+    </select>
+    <div id="price-info">ราคา: ขาวดำ 5 บาท/แผ่น, สี 10 บาท/แผ่น</div>
+    <div class="error-message" id="error-color-type"></div>
 
-  <script>
-    const fileDrop = document.getElementById('fileDrop');
-    const fileInput = document.getElementById('fileInput');
+    <div class="checkbox-group">
+      <input type="checkbox" id="agree" name="agree" required />
+      <label for="agree">ฉันยินยอมให้ข้อมูลถูกส่ง</label>
+    </div>
+    <div class="error-message" id="error-agree"></div>
 
-    fileDrop.addEventListener('click', () => fileInput.click());
+    <div>
+      <label>รวมราคา</label>
+      <input type="text" id="total-price" name="total_price" readonly style="background:#2a1f4d; color:#eee; font-weight: 700; text-align:center;" value="0 บาท" />
+    </div>
 
-    fileDrop.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      fileDrop.classList.add('dragover');
-    });
+    <br />
+    <button type="submit">ส่งคำสั่งปริ้น</button>
+  </form>
+</main>
 
-    fileDrop.addEventListener('dragleave', () => {
-      fileDrop.classList.remove('dragover');
-    });
+<script>
+  const form = document.getElementById('printer-form');
+  const fileUploadContainer = document.getElementById('file-upload-container');
+  const fileInput = document.getElementById('file-upload');
+  const fileList = document.getElementById('file-list');
+  const pagesInput = document.getElementById('pages');
+  const setsInput = document.getElementById('sets');
+  const colorSelect = document.getElementById('color-type');
+  const totalPriceInput = document.getElementById('total-price');
 
-    fileDrop.addEventListener('drop', (e) => {
-      e.preventDefault();
-      fileDrop.classList.remove('dragover');
-      const file = e.dataTransfer.files[0];
+  // Error message elements
+  const errors = {
+    fullname: document.getElementById('error-fullname'),
+    files: document.getElementById('error-files'),
+    pages: document.getElementById('error-pages'),
+    sets: document.getElementById('error-sets'),
+    colorType: document.getElementById('error-color-type'),
+    agree: document.getElementById('error-agree'),
+  };
+
+  // แสดงชื่อไฟล์ในกล่อง
+  function updateFileList() {
+    if (fileInput.files.length === 0) {
+      fileList.textContent = "ยังไม่มีไฟล์ถูกเลือก";
+    } else {
+      const names = Array.from(fileInput.files).map(f => f.name);
+      fileList.textContent = names.join(", ");
+      // อัปเดตจำนวนแผ่นอัตโนมัติเป็นไฟล์ที่เลือกได้เลย (ถ้าต้องการ)
+      // หรือให้กรอกเองในช่อง pages (ตอนนี้ไม่ได้เปลี่ยนอัตโนมัติ)
+    }
+  }
+
+  // รองรับลากไฟล์มาวาง
+  fileUploadContainer.addEventListener('click', () => fileInput.click());
+  fileUploadContainer.addEventListener('dragover', e => {
+    e.preventDefault();
+    fileUploadContainer.classList.add('dragover');
+  });
+  fileUploadContainer.addEventListener('dragleave', e => {
+    e.preventDefault();
+    fileUploadContainer.classList.remove('dragover');
+  });
+  fileUploadContainer.addEventListener('drop', e => {
+    e.preventDefault();
+    fileUploadContainer.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
       fileInput.files = e.dataTransfer.files;
-      fileDrop.textContent = file.name;
-    });
+      updateFileList();
+    }
+  });
 
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files.length > 0) {
-        fileDrop.textContent = fileInput.files[0].name;
-      }
-    });
+  fileInput.addEventListener('change', updateFileList);
 
-    document.getElementById('sets').addEventListener('input', calculateTotal);
-    document.getElementById('pages').addEventListener('input', calculateTotal);
-    document.getElementById('color').addEventListener('change', calculateTotal);
+  // คำนวณราคา
+  function calculatePrice() {
+    const pages = parseInt(pagesInput.value);
+    const sets = parseInt(setsInput.value);
+    const colorType = colorSelect.value;
+    if (isNaN(pages) || pages < 1 || isNaN(sets) || sets < 1 || !colorType) {
+      totalPriceInput.value = "0 บาท";
+      return;
+    }
+    let pricePerPage = colorType === 'color' ? 10 : 5;
+    let total = pages * sets * pricePerPage;
+    totalPriceInput.value = total.toLocaleString('th-TH') + " บาท";
+  }
 
-    function calculateTotal() {
-      const pages = parseInt(document.getElementById('pages').value);
-      const sets = parseInt(document.getElementById('sets').value);
-      const color = document.getElementById('color').value;
+  pagesInput.addEventListener('input', calculatePrice);
+  setsInput.addEventListener('input', calculatePrice);
+  colorSelect.addEventListener('change', calculatePrice);
 
-      if (!isNaN(pages) && !isNaN(sets) && color) {
-        const pricePerPage = color === "สี" ? 10 : 5;
-        const total = pages * sets * pricePerPage;
-        document.getElementById('total').value = total + " บาท";
-      } else {
-        document.getElementById('total').value = "";
-      }
+  // ฟังก์ชันตรวจสอบฟอร์มก่อนส่ง
+  form.addEventListener('submit', e => {
+    let valid = true;
+
+    // เคลียร์ข้อความ error ก่อน
+    for (const key in errors) {
+      errors[key].textContent = '';
     }
 
-    function validateForm() {
-      let valid = true;
-
-      const name = document.getElementById("name").value.trim();
-      const pages = document.getElementById("pages").value;
-      const sets = document.getElementById("sets").value;
-      const color = document.getElementById("color").value;
-      const agree = document.getElementById("agree").checked;
-      const file = document.getElementById("fileInput").files[0];
-
-      document.getElementById("nameError").textContent = name ? "" : "กรุณากรอกชื่อ";
-      document.getElementById("pagesError").textContent = pages ? "" : "กรุณาระบุจำนวนแผ่น";
-      document.getElementById("setsError").textContent = sets ? "" : "กรุณาระบุจำนวนชุด";
-      document.getElementById("colorError").textContent = color ? "" : "กรุณาเลือกประเภทการพิมพ์";
-      document.getElementById("fileError").textContent = file ? "" : "กรุณาแนบไฟล์";
-      document.getElementById("agreeError").textContent = agree ? "" : "กรุณายินยอมก่อนส่ง";
-
-      if (!name || !pages || !sets || !color || !file || !agree) valid = false;
-
-      return valid;
+    // เช็คชื่อ-นามสกุล
+    if (!form.fullname.value.trim()) {
+      errors.fullname.textContent = "โปรดกรอกชื่อ-นามสกุลให้ครบถ้วน";
+      valid = false;
     }
-  </script>
+    // เช็คไฟล์
+    if (!fileInput.files.length) {
+      errors.files.textContent = "โปรดแนบไฟล์อย่างน้อย 1 ไฟล์";
+      valid = false;
+    }
+    // เช็คจำนวนแผ่น
+    if (!form.pages.value || parseInt(form.pages.value) < 1) {
+      errors.pages.textContent = "โปรดกรอกจำนวนแผ่นอย่างถูกต้อง";
+      valid = false;
+    }
+    // เช็คจำนวนชุด
+    if (!form.sets.value || parseInt(form.sets.value) < 1) {
+      errors.sets.textContent = "โปรดกรอกจำนวนชุดอย่างถูกต้อง";
+      valid = false;
+    }
+    // เช็คประเภทการพิมพ์
+    if (!form.color_type.value) {
+      errors.colorType.textContent = "โปรดเลือกประเภทการพิมพ์";
+      valid = false;
+    }
+    // เช็ค checkbox ยินยอม
+    if (!form.agree.checked) {
+      errors.agree.textContent = "คุณต้องยืนยันความยินยอมก่อนส่ง";
+      valid = false;
+    }
+
+    if (!valid) {
+      e.preventDefault();
+      // เลื่อนขึ้นบนเพื่อให้เห็น error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+</script>
 </body>
 </html>
