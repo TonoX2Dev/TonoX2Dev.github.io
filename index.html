@@ -1,10 +1,181 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="refresh" content="0; url=https://www.canva.com/design/DAGplbM7iLc/pMY-nE9Imperek8sJoZ10w/view?utm_content=DAGplbM7iLc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h901387b9e5" />
-    <title>Redirecting...</title>
-  </head>
-  <body>
-    <p>กำลังพาไปยัง Canva... <a href="https://www.canva.com/design/DAGplbM7iLc/pMY-nE9Imperek8sJoZ10w/view?utm_content=DAGplbM7iLc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h901387b9e5">คลิกที่นี่ถ้าไม่เปลี่ยนหน้า</a></p>
-  </body>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TonoX2shop</title>
+<!-- ฟอนต์ไทย Sarabun จาก Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/png" href="images/favicon.png" />
+
+
+<style>
+  :root {
+    --color-primary: #4b3fbd; /* น้ำเงินม่วงเข้ม */
+    --color-secondary: #6f5acf; /* ม่วงอ่อน */
+    --color-bg: #f0f2ff;
+    --color-text: #222;
+    --color-button: #6f5acf;
+    --color-button-hover: #4b3fbd;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0; padding: 0;
+    font-family: Kanit, Arial, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  header {
+    background: var(--color-primary);
+    color: white;
+    padding: 1.2rem 2rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+
+  main {
+    max-width: 960px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap: 1.8rem;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgb(75 63 189 / 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgb(75 63 189 / 0.35);
+  }
+
+  .card img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: 3px solid var(--color-secondary);
+  }
+
+  .card-content {
+    padding: 1rem 1.2rem 1.6rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-content h3 {
+    margin: 0 0 0.6rem;
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  .card-content p {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    color: #444;
+  }
+
+  .btn {
+    display: inline-block;
+    margin-top: 1rem;
+    background: var(--color-button);
+    color: white;
+    padding: 0.6rem 1.6rem;
+    font-weight: 700;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    user-select: none;
+  }
+
+  .btn:hover {
+    background: var(--color-button-hover);
+  }
+
+  /* ปุ่มใน header หรืออื่น ๆ */
+  .btn-primary {
+    background-color: var(--color-primary);
+  }
+
+  /* ส่วนติดต่อ */
+  .contact {
+    text-align: center;
+    margin: 3rem 0 1rem;
+    font-size: 1.1rem;
+  }
+
+  .contact a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .contact a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    header {
+      font-size: 1.4rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>ที่จัดเก็บเเฟ้มข้อมูล TonoX2shop</header>
+
+<main>
+  <div class="grid">
+    <!-- ตัวอย่างกล่องงาน/สินค้า -->
+    <div class="card" onclick="window.open('https://tonox2dev.github.io', '_blank')">
+      <img src="images/y2k.png" alt="Project 1" />
+      <div class="card-content">
+        <h3>ข้อมูลคลิปตัดต่อ</h3>
+        <p>คลิปลับ ห้ามกด!! สำหรับผู้มีสิทธ์ดูได้เท่านั้น!</p>
+        <a href="https://youtu.be/xvFZjo5PgG0?si=JhFrCjQNusd9g8Ye" target="_blank" class="btn">ดูรายละเอียด</a>
+      </div>
+    </div>
+
+    <div class="card" onclick="window.open('https://tonox2dev.github.io', '_blank')">
+      <img src="images/music_class_presentation.gif" alt="Project 2" />
+      <div class="card-content">
+        <h3>งานกลุ่ม</h3>
+        <p>งานพรีเซนต์วิชาดนตรีเรื่อง ดนตรียุคกลาง</p>
+        <a href="https://www.canva.com/design/DAGplbM7iLc/pMY-nE9Imperek8sJoZ10w/view?utm_content=DAGplbM7iLc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h901387b9e5" target="_blank" class="btn">ดูรายละเอียด</a>
+      </div>
+      
+    </div>
+
+    <!-- เพิ่มกล่องงาน/สินค้าได้ตามต้องการ -->
+  </div>
+
+  <div class="contact">
+    ติดต่อผมได้ที่ <a href="mailto:tonox2chyt2@gmail.com">tonox2chyt2@gmail.com</a>
+  </div>
+</main>
+
+</body>
 </html>
