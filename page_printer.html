@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ฝากไฟล์ปริ้น - TonoX2Shop</title>
-<link rel="icon" href="favicon.png" />
+<link rel="icon" href="images/favicon.png" />
 <!-- ฟอนต์ Kanit จาก Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet" />
 <style>
@@ -213,7 +213,7 @@
 <header></header>
 
 <main>
-  <h1>ฝากไฟล์ปริ้น</h1>
+  <h1>รับปริ้นงานออนไลน์</h1>
 
   <form id="printer-form" action="https://getform.io/f/bqomeydb" method="POST" enctype="multipart/form-data" novalidate>
 <input type="hidden" name="_redirect" value="https://tonox2dev.github.io/thank_you.html">
@@ -253,7 +253,7 @@
 
     <div class="checkbox-group">
       <input type="checkbox" id="agree" name="agree" required />
-      <label for="agree">ฉันยินยอมให้ข้อมูลถูกส่ง</label>
+      <label for="agree">ฉันยินยอมข้อมูลเเละชำระเงินตอนนี้</label>
     </div>
     <div class="error-message" id="error-agree"></div>
 
@@ -349,7 +349,7 @@
 
     // เช็คชื่อ-นามสกุล
     if (!form.fullname.value.trim()) {
-      errors.fullname.textContent = "โปรดกรอกชื่อ-นามสกุลให้ครบถ้วน";
+      errors.fullname.textContent = "โปรดกรอกชื่อ-ลิงค์เฟสบุ๊คในถูกต้อง";
       valid = false;
     }
     // เช็คไฟล์
