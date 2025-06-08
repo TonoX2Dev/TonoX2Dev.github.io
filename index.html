@@ -1,170 +1,136 @@
-  <!DOCTYPE html>
-  <html lang="th">
-  <head>
+    <!DOCTYPE html>
+    <html lang="th">
+    <head>
+      <style>
+   body {
+    margin: 0; padding: 0;
+    background: linear-gradient(270deg, #3a0ca3, #720026, #3a0ca3);
+    background-size: 600% 600%;
+    animation: bgmove 15s ease infinite;
+    color: #eee;
+  }
+  @keyframes bgmove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+    </style>
+      
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>TonoX2Shop - รวมผลงานของผม</title>
+      <meta name="description" content="รวมผลงานของ TonoX2 บางส่วน สามารถเข้าลิงค์ไปชมได้นะครับ">
+
+      <!-- Open Graph (Facebook / Discord) -->
+      <meta property="og:title" content="TonoX2Shop - รวมผลงานของผม">
+      <meta property="og:description" content="รวมผลงานของ TonoX2 บางส่วน สามารถเข้าลิงค์ไปชมได้นะครับ">
+      <meta property="og:image" content="https://raw.githubusercontent.com/TonoX2Dev/TonoX2Dev.github.io/main/images/music_class_presentation.png">
+      <meta property="og:url" content="https://tonox2dev.github.io">
+      <meta property="og:type" content="website">
+
+      <!-- Twitter -->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="TonoX2Shop - รวมผลงานของผม">
+      <meta name="twitter:description" content="รวมผลงานของ TonoX2 บางส่วน สามารถเข้าลิงค์ไปชมได้นะครับ">
+      <meta name="twitter:image" content="https://raw.githubusercontent.com/TonoX2Dev/TonoX2Dev.github.io/main/images/music_class_presentation.png">
+
+      <!-- Favicon -->
+    <!-- ฟอนต์ไทย kanit จาก Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+
+
     <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(-45deg, #f8f8ff, #c5c8ff, #b8b0ff, #c3a9ff);
-    background-size: 400% 400%;
-    animation: gradientBG 5s ease infinite;
-    font-family: 'Kanit', sans-serif;
-  }
+      
+      :root {
+        --color-primary: #4b3fbd; /* น้ำเงินม่วงเข้ม */
+        --color-secondary: #6f5acf; /* ม่วงอ่อน */
+        --color-bg: #f0f2ff;
+        --color-text: #222;
+        --color-button: #6f5acf;
+        --color-button-hover: #4b3fbd;
+        --indev-color-button: #ffb14a;
+        --coming-color-button: #ff0000;
+      }
 
-  @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  </style>
-    
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TonoX2Shop - รวมผลงานของผม</title>
-    <meta name="description" content="รวมผลงานของ TonoX2 บางส่วน สามารถเข้าลิงค์ไปชมได้นะครับ">
+      * {
+        box-sizing: border-box;
+      }
 
-    <!-- Open Graph (Facebook / Discord) -->
-    <meta property="og:title" content="TonoX2Shop - รวมผลงานของผม">
-    <meta property="og:description" content="รวมผลงานของ TonoX2 บางส่วน สามารถเข้าลิงค์ไปชมได้นะครับ">
-    <meta property="og:image" content="https://raw.githubusercontent.com/TonoX2Dev/TonoX2Dev.github.io/main/images/music_class_presentation.png">
-    <meta property="og:url" content="https://tonox2dev.github.io">
-    <meta property="og:type" content="website">
+      body {
+        margin: 0; padding: 0;
+        font-family: Kanit, Arial, sans-serif;
+        background-color: var(--color-bg);
+        color: var(--color-text);
+      }
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="TonoX2Shop - รวมผลงานของผม">
-    <meta name="twitter:description" content="รวมผลงานของ TonoX2 บางส่วน สามารถเข้าลิงค์ไปชมได้นะครับ">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/TonoX2Dev/TonoX2Dev.github.io/main/images/music_class_presentation.png">
+      header {
+        background: var(--color-primary);
+        color: white;
+        padding: 1.2rem 2rem;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+      }
 
-    <!-- Favicon -->
-  <!-- ฟอนต์ไทย kanit จาก Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
-  <link rel="icon" type="image/png" href="images/favicon.png" />
+      main {
+        max-width: 960px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
 
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+        gap: 1.8rem;
+      }
 
-  <style>
-    
-    :root {
-      --color-primary: #4b3fbd; /* น้ำเงินม่วงเข้ม */
-      --color-secondary: #6f5acf; /* ม่วงอ่อน */
-      --color-bg: #f0f2ff;
-      --color-text: #222;
-      --color-button: #6f5acf;
-      --color-button-hover: #4b3fbd;
-      --indev-color-button: #ffb14a;
-      --coming-color-button: #ff0000;
-    }
+      .card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgb(75 63 189 / 0.2);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 24px rgb(75 63 189 / 0.35);
+      }
 
-    * {
-      box-sizing: border-box;
-    }
+      .card img {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        border-bottom: 3px solid var(--color-secondary);
+      }
 
-    body {
-      margin: 0; padding: 0;
-      font-family: Kanit, Arial, sans-serif;
-      background-color: var(--color-bg);
-      color: var(--color-text);
-    }
+      .card-content {
+        padding: 1rem 1.2rem 1.6rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
 
-    header {
-      background: var(--color-primary);
-      color: white;
-      padding: 1.2rem 2rem;
-      text-align: center;
-      font-weight: 700;
-      font-size: 1.8rem;
-      letter-spacing: 1px;
-    }
+      .card-content h3 {
+        margin: 0 0 0.6rem;
+        color: var(--color-primary);
+        font-weight: 700;
+      }
 
-    main {
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
+      .card-content p {
+        flex-grow: 1;
+        font-size: 0.95rem;
+        color: #444;
+      }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-      gap: 1.8rem;
-    }
-
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 14px rgb(75 63 189 / 0.2);
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 24px rgb(75 63 189 / 0.35);
-    }
-
-    .card img {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      border-bottom: 3px solid var(--color-secondary);
-    }
-
-    .card-content {
-      padding: 1rem 1.2rem 1.6rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-content h3 {
-      margin: 0 0 0.6rem;
-      color: var(--color-primary);
-      font-weight: 700;
-    }
-
-    .card-content p {
-      flex-grow: 1;
-      font-size: 0.95rem;
-      color: #444;
-    }
-
-    .btn {
-      display: inline-block;
-      margin-top: 1rem;
-      background: var(--color-button);
-      color: white;
-      padding: 0.6rem 1.6rem;
-      font-weight: 700;
-      border-radius: 30px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      text-decoration: none;
-      text-align: center;
-      user-select: none;
-    }
-
-    .btn_dev {
-      display: inline-block;
-      margin-top: 1rem;
-      background: var(--indev-color-button);
-      color: white;
-      padding: 0.6rem 1.6rem;
-      font-weight: 700;
-      border-radius: 30px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      text-decoration: none;
-      text-align: center;
-      user-select: none;
-    }
-    .btn_coming
-    {
+      .btn {
         display: inline-block;
         margin-top: 1rem;
-        background: var(--coming-color-button);
+        background: var(--color-button);
         color: white;
         padding: 0.6rem 1.6rem;
         font-weight: 700;
@@ -177,118 +143,150 @@
         user-select: none;
       }
 
-    .btn:hover {
-      background: var(--color-button-hover);
-    }
-
-    /* ปุ่มใน header หรืออื่น ๆ */
-    .btn-primary {
-      background-color: var(--color-primary);
-    }
-
-    /* ส่วนติดต่อ */
-    .contact {
-      text-align: center;
-      margin: 3rem 0 1rem;
-      font-size: 1.1rem;
-    }
-
-    .contact a {
-      color: var(--color-primary);
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .contact a:hover {
-      text-decoration: underline;
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      header {
-        font-size: 1.4rem;
+      .btn_dev {
+        display: inline-block;
+        margin-top: 1rem;
+        background: var(--indev-color-button);
+        color: white;
+        padding: 0.6rem 1.6rem;
+        font-weight: 700;
+        border-radius: 30px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+        user-select: none;
       }
-    }
-  </style>
-  </head>
-  <body>
+      .btn_coming
+      {
+          display: inline-block;
+          margin-top: 1rem;
+          background: var(--coming-color-button);
+          color: white;
+          padding: 0.6rem 1.6rem;
+          font-weight: 700;
+          border-radius: 30px;
+          border: none;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          text-decoration: none;
+          text-align: center;
+          user-select: none;
+        }
 
-  <header>ฐานข้อมูล TonoX2shop</header>
+      .btn:hover {
+        background: var(--color-button-hover);
+      }
 
-  <main>
-    <div class="grid">
-      <!-- ตัวอย่างกล่องงาน/สินค้า -->
-      <div class="card" onclick="handleCardClick(event, 'https://youtu.be/xvFZjo5PgG0?si=JhFrCjQNusd9g8Ye')">
-        <img src="images/y2k.png" alt="Project 1" />
-        <div class="card-content">
-          <h3>ข้อมูลคลิปตัดต่อ</h3>
-          <p>คลิปลับ ห้ามกด!! สำหรับผู้มีสิทธ์ดูได้เท่านั้น!</p>
-          <a href="https://youtu.be/xvFZjo5PgG0?si=JhFrCjQNusd9g8Ye" target="_blank" class="btn">ดูรายละเอียด</a>
+      /* ปุ่มใน header หรืออื่น ๆ */
+      .btn-primary {
+        background-color: var(--color-primary);
+      }
+
+      /* ส่วนติดต่อ */
+      .contact {
+        text-align: center;
+        margin: 3rem 0 1rem;
+        font-size: 1.1rem;
+      }
+
+      .contact a {
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .contact a:hover {
+        text-decoration: underline;
+      }
+
+      /* Responsive */
+      @media (max-width: 600px) {
+        header {
+          font-size: 1.4rem;
+        }
+      }
+    </style>
+    </head>
+    <body>
+
+    <header>ฐานข้อมูล TonoX2shop</header>
+
+    <main>
+      <div class="grid">
+        <!-- ตัวอย่างกล่องงาน/สินค้า -->
+        <div class="card" onclick="handleCardClick(event, 'https://youtu.be/xvFZjo5PgG0?si=JhFrCjQNusd9g8Ye')">
+          <img src="images/y2k.png" alt="Project 1" />
+          <div class="card-content">
+            <h3>ข้อมูลคลิปตัดต่อ</h3>
+            <p>คลิปลับ ห้ามกด!! สำหรับผู้มีสิทธ์ดูได้เท่านั้น!</p>
+            <a href="https://youtu.be/xvFZjo5PgG0?si=JhFrCjQNusd9g8Ye" target="_blank" class="btn">ดูรายละเอียด</a>
+          </div>
+
+        </div>
+        <div class="card" onclick="handleCardClick(event, 'https://www.canva.com/design/DAGplbM7iLc/pMY-nE9Imperek8sJoZ10w/view?utm_content=DAGplbM7iLc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h901387b9e5')">
+      <img src="images/music_class_presentation.gif" alt="Project 2" />
+      <div class="card-content">
+        <h3>งานกลุ่ม</h3>
+        <p>งานพรีเซนต์วิชาดนตรีเรื่อง ดนตรียุคกลาง</p>
+        <a href="https://www.canva.com/design/DAGplbM7iLc/pMY-nE9Imperek8sJoZ10w/view?utm_content=DAGplbM7iLc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h901387b9e5" target="_blank" class="btn">ดูรายละเอียด</a>
+      </div>
+
+    </div>
+        <div class="card" onclick="handleCardClick(event, 'https://openai.com/blog/chatgpt')">
+          <img src="images/chat_gpt.webp" alt="Project 3" />
+          <div class="card-content">
+            <h3>ข้อมูล ChatGPT</h3>
+            <p>ข้อมูลเกี่ยวกับ ChatGPT ที่น่าสนใจ ดูได้ที่นี่</p>
+            <a href="https://openai.com/blog/chatgpt" target="_blank" class="btn">ดูรายละเอียด</a>
+          </div>
+      
+    </div><div class="card" onclick="handleCardClick(event, 'https://tonox2dev.github.io/page_printer.html')">
+      <img src="images/free_Code.jpg" alt="Project 4" />
+      <div class="card-content">
+        <h3>รับปริ้นงานออนไลน์</h3>
+        <p>คุณสามาารถทดลองใช้คำสั่งปริ้นงานได้ที่นี่</p>
+        <a href="https://tonox2dev.github.io/page_printer.html" target="_blank" class="btn_dev">ทดลองใช้</a>
+      </div>
+
+    </div>
+    <div class="card" onclick="handleCardClick(event, 'https://status.roblox.com')">
+      <img src="images/gag.webp" alt="Project 5" />
+      <div class="card-content">
+        <h3>การอัพเดตสถานะ roblox status</h3>
+        <p>เพจนี้เป็นอัพอัพเดตสถานะ ของ roblox เเละ GAG</p>
+        <a href="https://status.roblox.com/" target="_blank" class="btn_dev">อยู่ระหว่างการพัฒนา</a>
+      </div>
+
+    </div>
+    <div class="card" onclick="handleCardClick(event, ' ')">
+      <img src="images/coming.jpg" alt="Project 3" />
+      <div class="card-content">
+        <h3>เฉลยการบ้าน</h3>
+        <p>เเจกเว็บเฉลยการบ้านในหนังสือ</p>
+        <a href="page_printer.html" target="_blank" class="btn_coming">เร็วๆนี้</a>
+      </div>
+
+
+    <script>
+      function handleCardClick(event, link) {
+        // ถ้าคลิกตรง <a> หรือลูกหลานของ <a> → ไม่ต้องทำอะไร
+        if (event.target.closest('a')) return;
+        window.open(link, '_blank');
+      }
+    </script>
+
+          
         </div>
 
-      </div>
-      <div class="card" onclick="handleCardClick(event, 'https://www.canva.com/design/DAGplbM7iLc/pMY-nE9Imperek8sJoZ10w/view?utm_content=DAGplbM7iLc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h901387b9e5')">
-    <img src="images/music_class_presentation.gif" alt="Project 2" />
-    <div class="card-content">
-      <h3>งานกลุ่ม</h3>
-      <p>งานพรีเซนต์วิชาดนตรีเรื่อง ดนตรียุคกลาง</p>
-      <a href="https://www.canva.com/design/DAGplbM7iLc/pMY-nE9Imperek8sJoZ10w/view?utm_content=DAGplbM7iLc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h901387b9e5" target="_blank" class="btn">ดูรายละเอียด</a>
-    </div>
-
-  </div>
-      <div class="card" onclick="handleCardClick(event, 'https://openai.com/blog/chatgpt')">
-        <img src="images/chat_gpt.webp" alt="Project 3" />
-        <div class="card-content">
-          <h3>ข้อมูล ChatGPT</h3>
-          <p>ข้อมูลเกี่ยวกับ ChatGPT ที่น่าสนใจ ดูได้ที่นี่</p>
-          <a href="https://openai.com/blog/chatgpt" target="_blank" class="btn">ดูรายละเอียด</a>
-        </div>
-    
-  </div><div class="card" onclick="handleCardClick(event, 'https://github.com/TonoX2Dev/TonoX2Dev.github.io')">
-    <img src="images/free_Code.jpg" alt="Project 4" />
-    <div class="card-content">
-      <h3>เเจกโค้ด</h3>
-      <p>โค้ดนี้เป็นโค้ดลับ ต้องหาผมให้เจอ</p>
-      <a href="https://github.com/TonoX2Dev/TonoX2Dev.github.io" target="_blank" class="btn_dev">อยู่ระหว่างการพัฒนา</a>
-    </div>
-
-  </div>
-  <div class="card" onclick="handleCardClick(event, 'https://status.roblox.com')">
-    <img src="images/gag.webp" alt="Project 5" />
-    <div class="card-content">
-      <h3>การอัพเดตสถานะ roblox status</h3>
-      <p>เพจนี้เป็นอัพอัพเดตสถานะ ของ roblox เเละ GAG</p>
-      <a href="https://status.roblox.com/" target="_blank" class="btn_dev">อยู่ระหว่างการพัฒนา</a>
-    </div>
-
-  </div>
-  <div class="card" onclick="handleCardClick(event, 'https://tonox2dev.github.io/page_printer.html')">
-    <img src="images/coming.jpg" alt="Project 3" />
-    <div class="card-content">
-      <h3>เฉลยการบ้าน</h3>
-      <p>เเจกเว็บเฉลยการบ้านในหนังสือ</p>
-      <a href="page_printer.html" target="_blank" class="btn_coming">เร็วๆนี้</a>
-    </div>
-
-
-  <script>
-    function handleCardClick(event, link) {
-      // ถ้าคลิกตรง <a> หรือลูกหลานของ <a> → ไม่ต้องทำอะไร
-      if (event.target.closest('a')) return;
-      window.open(link, '_blank');
-    }
-  </script>
-
-        
+        <!-- เพิ่มกล่องงาน/สินค้าได้ตามต้องการ -->
       </div>
 
-      <!-- เพิ่มกล่องงาน/สินค้าได้ตามต้องการ -->
-    </div>
+      <div class="contact">
+        ติดต่อผมได้ที่ <a href="mailto:tonox2chyt2@gmail.com">tonox2chyt2@gmail.com</a>
+      </div>
+    </main>
 
-    <div class="contact">
-      ติดต่อผมได้ที่ <a href="mailto:tonox2chyt2@gmail.com">tonox2chyt2@gmail.com</a>
-    </div>
-  </main>
-
-  </body>
-  </html>
+    </body>
+    </html>
