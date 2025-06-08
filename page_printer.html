@@ -200,7 +200,64 @@
     box-shadow: 0 0 25px #5e35b1dd;
   }
 
+ #submitBtn {
+    position: relative;
+    background: #6a5acd;
+    border: none;
+    color: white;
+    padding: 12px 0;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 700;
+   
+  }
+  #submitBtn:hover {
+    background: #5849c2;
+  }
+  /* ไอคอนหมุน */
+  .spinner {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+/* ปรับ number input ให้เหมือน text input */
+input[type="number"] {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #555;
+  background: #1a1425;
+  color: #eee;
+  font-size: 16px;
+  box-sizing: border-box;
+  margin-bottom: 18px;
+  transition: border-color 0.3s;
+}
+input[type="number"]:focus {
+  border-color: #7e57c2;
+  outline: none;
+}
+
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
 </head>
 <body>
 
@@ -215,8 +272,10 @@
 <main>
   <h1>รับปริ้นงานออนไลน์</h1>
 
-  <form id="printer-form" action="https://getform.io/f/bqomeydb" method="POST" enctype="multipart/form-data" novalidate>
-<input type="hidden" name="_redirect" value="https://tonox2dev.github.io/thank_you.html">
+  <form id="printer-form" action="https://getform.io/f/bpjpzvyb" method="POST" enctype="multipart/form-data" target="hidden_iframe" onsubmit="return onFormSubmit()" novalidate>
+
+    <!-- Hidden field for redirect after submission -->
+
 
     <label for="fullname">ชื่อจริงเฟสบุ๊ค หรือลิงค์ profile*</label>
     <input type="text" id="fullname" name="fullname" placeholder="ลิงค์ profile เช่น https://www.facebook.com/your.name" required />
@@ -228,16 +287,17 @@
       <div id="file-list">ยังไม่มีไฟล์ถูกเลือก</div>
     </div>
     <div class="error-message" id="error-files"></div>
-
+    
     <div class="inline-row">
       <div>
-        <label for="pages">จำนวนแผ่น *</label>
-        <input type="text" id="pages" name="pages" min="1" placeholder="จำนวนแผ่น" required />
+        <label for="pages">จำนวนแผ่น:</label>
+      <input type="number" id="pages" name="pages" min="1" placeholder="จำนวนแผ่น" required>
+
         <div class="error-message" id="error-pages"></div>
       </div>
       <div>
         <label for="sets">จำนวนชุด *</label>
-        <input type="text" id="sets" name="sets" min="1" value="1" required />
+        <input type="number" id="sets" name="sets" min="1" value="1" required />
         <div class="error-message" id="error-sets"></div>
       </div>
     </div>
@@ -245,7 +305,7 @@
     <label for="color-type">ประเภทการพิมพ์ *</label>
     <select id="color-type" name="color_type" required>
       <option value="">-- กรุณาเลือก --</option>
-      <option value="bw">ขาวดำ (5 บาท/แผ่น)</option>
+      <option value="black">ขาวดำ (5 บาท/แผ่น)</option>
       <option value="color">สี (10 บาท/แผ่น)</option>
     </select>
     <div id="price-info">ราคา: ขาวดำ 5 บาท/แผ่น, สี 10 บาท/แผ่น</div>
@@ -263,7 +323,14 @@
     </div>
 
     <br />
-    <button type="submit">ส่งคำสั่งปริ้น</button>
+    <button type="submit" id="submitBtn">
+  <div class="spinner" id="spinner"></div>
+  <span id="submitText">ส่งคำขอปริ้น</span>
+</button>
+
+    
+    <iframe name="hidden_iframe" style="display: none;" onload="formSubmitted()"></iframe>
+
   </form>
 </main>
 
@@ -384,6 +451,137 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   });
+
+  
+  let submitting = false;
+  function onFormSubmit() {
+    submitting = true;
+    return true; // ให้ฟอร์ม submit ตามปกติ
+  }
+
+  function formSubmitted() {
+    if (submitting) {
+      submitting = false;
+      setTimeout(() => {
+        window.location.href = "thank_you.html";
+      }, 200); // รอโหลดเสร็จสักนิด แล้วค่อย redirect
+    }
+  }
+
+  // ... โค้ดเดิมด้านบนไม่ต้องเปลี่ยน ...
+
+  fileInput.addEventListener('change', () => {
+    updateFileList();
+    detectPagesFromFiles(fileInput.files);
+  });
+
+  // ตรวจแผ่นอัตโนมัติจากไฟล์
+  function detectPagesFromFiles(files) {
+    let totalPages = 0;
+    let processed = 0;
+
+    [...files].forEach(file => {
+      const ext = file.name.split('.').pop().toLowerCase();
+
+      if (ext === 'pdf') {
+        const reader = new FileReader();
+        reader.onload = function() {
+          const typedArray = new Uint8Array(reader.result);
+          pdfjsLib.getDocument(typedArray).promise.then(doc => {
+            totalPages += doc.numPages;
+            processed++;
+            checkAndSetPages();
+          }).catch(() => processed++);
+        };
+        reader.readAsArrayBuffer(file);
+
+      } else if (ext === 'docx') {
+        const reader = new FileReader();
+        reader.onload = function() {
+          mammoth.convertToHtml({ arrayBuffer: reader.result })
+            .then(() => {
+              // สมมุติว่า docx เฉลี่ย 1 หน้า ต่อทุก ~600 คำ (ประมาณคร่าว ๆ)
+              const wordCount = reader.result.byteLength / 6; // ประมาณคำ
+              const estimatedPages = Math.max(1, Math.round(wordCount / 300)); 
+              totalPages += estimatedPages;
+              processed++;
+              checkAndSetPages();
+            }).catch(() => processed++);
+        };
+        reader.readAsArrayBuffer(file);
+
+      } else {
+        processed++;
+        checkAndSetPages();
+      }
+    });
+
+    function checkAndSetPages() {
+      if (processed === files.length) {
+        if (totalPages > 0) {
+          pagesInput.value = totalPages;
+          calculatePrice(); // อัปเดตราคา
+        }
+      }
+    }
+  }
+
+  // ปุ่ม submit - แสดงรูปโหลด
+  form.addEventListener('submit', e => {
+    const spinner = document.getElementById('spinner');
+    spinner.style.display = 'block';
+    document.getElementById('submitBtn').disabled = true;
+  });
+
+  form.addEventListener('submit', e => {
+  let valid = true;
+
+  // เคลียร์ข้อความ error ก่อน
+  for (const key in errors) {
+    errors[key].textContent = '';
+  }
+
+  // Validation (เหมือนเดิม)
+  if (!form.fullname.value.trim()) {
+    errors.fullname.textContent = "โปรดกรอกชื่อ-ลิงค์เฟสบุ๊คในถูกต้อง";
+    valid = false;
+  }
+  if (!fileInput.files.length) {
+    errors.files.textContent = "โปรดแนบไฟล์อย่างน้อย 1 ไฟล์";
+    valid = false;
+  }
+  if (!form.pages.value || parseInt(form.pages.value) < 1) {
+    errors.pages.textContent = "โปรดกรอกจำนวนแผ่นอย่างถูกต้อง";
+    valid = false;
+  }
+  if (!form.sets.value || parseInt(form.sets.value) < 1) {
+    errors.sets.textContent = "โปรดกรอกจำนวนชุดอย่างถูกต้อง";
+    valid = false;
+  }
+  if (!form.color_type.value) {
+    errors.colorType.textContent = "โปรดเลือกประเภทการพิมพ์";
+    valid = false;
+  }
+  if (!form.agree.checked) {
+    errors.agree.textContent = "คุณต้องยืนยันความยินยอมก่อนส่ง";
+    valid = false;
+  }
+
+  if (!valid) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // ซ่อน spinner, แสดงข้อความ submit
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('submitText').style.display = 'inline';
+    document.getElementById('submitBtn').disabled = false;
+    return;
+  }
+
+  // ถ้าผ่าน validation
+  document.getElementById('spinner').style.display = 'block';
+  document.getElementById('submitText').style.display = 'none';
+  document.getElementById('submitBtn').disabled = true;
+});
 </script>
 </body>
 </html>
