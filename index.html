@@ -1,292 +1,1215 @@
-    <!DOCTYPE html>
-    <html lang="th">
-    <head>
-      <style>
-   body {
-    margin: 0; padding: 0;
-    background: linear-gradient(270deg, #3a0ca3, #720026, #3a0ca3);
-    background-size: 600% 600%;
-    animation: bgmove 15s ease infinite;
-    color: #eee;
-  }
-  @keyframes bgmove {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
-  }
-    </style>
-      
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>TonoX2Shop - รวมผลงานของผม</title>
-      <meta name="description" content="รวมผลงานของ TonoX2 บางส่วน สามารถเข้าลิงค์ไปชมได้นะครับ">
+<!DOCTYPE html>
+<html lang="th" class="h-full antialiased">
 
-      <!-- Open Graph (Facebook / Discord) -->
-      <meta property="og:title" content="TonoX2Shop - รวมผลงานของผม">
-      <meta property="og:description" content="รวมผลงานของ TonoX2 บางส่วน สามารถเข้าลิงค์ไปชมได้นะครับ">
-      <meta property="og:image" content="https://raw.githubusercontent.com/TonoX2Dev/TonoX2Dev.github.io/main/images/music_class_presentation.png">
-      <meta property="og:url" content="https://tonox2dev.github.io">
-      <meta property="og:type" content="website">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gemini Group Chat</title>
 
-      <!-- Twitter -->
-      <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:title" content="TonoX2Shop - รวมผลงานของผม">
-      <meta name="twitter:description" content="รวมผลงานของ TonoX2 บางส่วน สามารถเข้าลิงค์ไปชมได้นะครับ">
-      <meta name="twitter:image" content="https://raw.githubusercontent.com/TonoX2Dev/TonoX2Dev.github.io/main/images/music_class_presentation.png">
+    <!-- Google Fonts & Material Symbols (Authentic Gemini UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-      <!-- Favicon -->
-    <!-- ฟอนต์ไทย kanit จาก Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="images/favicon.png" />
-
-
-    <style>
-      
-      :root {
-        --color-primary: #4b3fbd; /* น้ำเงินม่วงเข้ม */
-        --color-secondary: #6f5acf; /* ม่วงอ่อน */
-        --color-bg: #f0f2ff;
-        --color-text: #222;
-        --color-button: #6f5acf;
-        --color-button-hover: #4b3fbd;
-        --indev-color-button: #ffb14a;
-        --coming-color-button: #ff0000;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0; padding: 0;
-        font-family: Kanit, Arial, sans-serif;
-        background-color: var(--color-bg);
-        color: var(--color-text);
-      }
-
-      header {
-        background: var(--color-primary);
-        color: white;
-        padding: 1.2rem 2rem;
-        text-align: center;
-        font-weight: 700;
-        font-size: 1.8rem;
-        letter-spacing: 1px;
-      }
-
-      main {
-        max-width: 960px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-        gap: 1.8rem;
-      }
-
-      .card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 14px rgb(75 63 189 / 0.2);
-        cursor: pointer;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-      .card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 8px 24px rgb(75 63 189 / 0.35);
-      }
-
-      .card img {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        object-fit: cover;
-        border-bottom: 3px solid var(--color-secondary);
-      }
-
-      .card-content {
-        padding: 1rem 1.2rem 1.6rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .card-content h3 {
-        margin: 0 0 0.6rem;
-        color: var(--color-primary);
-        font-weight: 700;
-      }
-
-      .card-content p {
-        flex-grow: 1;
-        font-size: 0.95rem;
-        color: #444;
-      }
-
-      .btn {
-        display: inline-block;
-        margin-top: 1rem;
-        background: var(--color-button);
-        color: white;
-        padding: 0.6rem 1.6rem;
-        font-weight: 700;
-        border-radius: 30px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        text-decoration: none;
-        text-align: center;
-        user-select: none;
-      }
-
-      .btn_dev {
-        display: inline-block;
-        margin-top: 1rem;
-        background: var(--indev-color-button);
-        color: white;
-        padding: 0.6rem 1.6rem;
-        font-weight: 700;
-        border-radius: 30px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        text-decoration: none;
-        text-align: center;
-        user-select: none;
-      }
-      .btn_coming
-      {
-          display: inline-block;
-          margin-top: 1rem;
-          background: var(--coming-color-button);
-          color: white;
-          padding: 0.6rem 1.6rem;
-          font-weight: 700;
-          border-radius: 30px;
-          border: none;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-          text-decoration: none;
-          text-align: center;
-          user-select: none;
-        }
-
-      .btn:hover {
-        background: var(--color-button-hover);
-      }
-
-      /* ปุ่มใน header หรืออื่น ๆ */
-      .btn-primary {
-        background-color: var(--color-primary);
-      }
-
-      /* ส่วนติดต่อ */
-      .contact {
-        text-align: center;
-        margin: 3rem 0 1rem;
-        font-size: 1.1rem;
-      }
-
-      .contact a {
-        color: var(--color-primary);
-        text-decoration: none;
-        font-weight: 700;
-      }
-
-      .contact a:hover {
-        text-decoration: underline;
-      }
-
-      /* Responsive */
-      @media (max-width: 600px) {
-        header {
-          font-size: 1.4rem;
-        }
-      }
-    </style>
-    </head>
-    <body>
-
-    <header>ฐานข้อมูล TonoX2shop</header>
-
-    <main>
-      <div class="grid">
-        <!-- ตัวอย่างกล่องงาน/สินค้า -->
-        <div class="card" onclick="handleCardClick(event, 'https://youtu.be/xvFZjo5PgG0?si=JhFrCjQNusd9g8Ye')">
-          <img src="images/y2k.png" alt="Project 1" />
-          <div class="card-content">
-            <h3>ข้อมูลคลิปตัดต่อ</h3>
-            <p>คลิปลับ ห้ามกด!! สำหรับผู้มีสิทธ์ดูได้เท่านั้น!</p>
-            <a href="https://youtu.be/xvFZjo5PgG0?si=JhFrCjQNusd9g8Ye" target="_blank" class="btn">ดูรายละเอียด</a>
-          </div>
-
-        </div>
-        <div class="card" onclick="handleCardClick(event, 'https://www.canva.com/design/DAGplbM7iLc/pMY-nE9Imperek8sJoZ10w/view?utm_content=DAGplbM7iLc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h901387b9e5')">
-      <img src="images/music_class_presentation.gif" alt="Project 2" />
-      <div class="card-content">
-        <h3>งานกลุ่ม</h3>
-        <p>งานพรีเซนต์วิชาดนตรีเรื่อง ดนตรียุคกลาง</p>
-        <a href="https://www.canva.com/design/DAGplbM7iLc/pMY-nE9Imperek8sJoZ10w/view?utm_content=DAGplbM7iLc&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h901387b9e5" target="_blank" class="btn">ดูรายละเอียด</a>
-      </div>
-
-    </div>
-        <div class="card" onclick="handleCardClick(event, 'https://openai.com/blog/chatgpt')">
-          <img src="images/chat_gpt.webp" alt="Project 3" />
-          <div class="card-content">
-            <h3>ข้อมูล ChatGPT</h3>
-            <p>ข้อมูลเกี่ยวกับ ChatGPT ที่น่าสนใจ ดูได้ที่นี่</p>
-            <a href="https://openai.com/blog/chatgpt" target="_blank" class="btn">ดูรายละเอียด</a>
-          </div>
-      
-    </div><div class="card" onclick="handleCardClick(event, 'https://tonox2dev.github.io/page_printer.html')">
-      <img src="images/free_Code.jpg" alt="Project 4" />
-      <div class="card-content">
-        <h3>รับปริ้นงานออนไลน์</h3>
-        <p>คุณสามาารถทดลองใช้คำสั่งปริ้นงานได้ที่นี่</p>
-        <a href="https://tonox2dev.github.io/page_printer.html" target="_blank" class="btn_dev">ทดลองใช้</a>
-      </div>
-
-    </div>
-    <div class="card" onclick="handleCardClick(event, 'https://status.roblox.com')">
-      <img src="images/gag.webp" alt="Project 5" />
-      <div class="card-content">
-        <h3>การอัพเดตสถานะ roblox status</h3>
-        <p>เพจนี้เป็นอัพอัพเดตสถานะ ของ roblox เเละ GAG</p>
-        <a href="https://status.roblox.com/" target="_blank" class="btn_dev">อยู่ระหว่างการพัฒนา</a>
-      </div>
-
-    </div>
-    <div class="card" onclick="handleCardClick(event, ' ')">
-      <img src="images/coming.jpg" alt="Project 3" />
-      <div class="card-content">
-        <h3>เฉลยการบ้าน</h3>
-        <p>เเจกเว็บเฉลยการบ้านในหนังสือ</p>
-        <a href="MAB.rbxl" target="_blank" class="btn_coming">เร็วๆนี้</a>
-      </div>
-
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
-      function handleCardClick(event, link) {
-        // ถ้าคลิกตรง <a> หรือลูกหลานของ <a> → ไม่ต้องทำอะไร
-        if (event.target.closest('a')) return;
-        window.open(link, '_blank');
-      }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Google Sans"', '"Inter"', 'sans-serif'],
+                    },
+                    colors: {
+                        /* Authentic Google Gemini Dark Mode Colors */
+                        geminiBg: '#131314',
+                        geminiSurface: '#1E1F20',
+                        geminiSurfaceHover: '#333537',
+                        geminiPrimaryText: '#E3E3E3',
+                        geminiSecondaryText: '#C4C7C5',
+                        geminiBlue: '#A8C7FA',
+                        geminiBlueBg: '#1c2b42', /* Active message bubble */
+                        geminiBorder: '#444746',
+                        geminiActiveGreen: '#34A853',
+                        geminiErrorRed: '#F28B82'
+                    }
+                }
+            }
+        }
     </script>
 
-          
+    <style>
+        /* Minimalist Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #444746;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C4C7C5;
+        }
+
+        /* Authentic Gemini Text Gradient */
+        .gemini-gradient-text {
+            background: linear-gradient(74deg, #4285f4 0%, #9b72cb 25%, #d96570 50%, #4285f4 100%);
+            background-size: 200% auto;
+            background-clip: text;
+            /* standard property for compatibility */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShine 4s linear infinite;
+        }
+
+        @keyframes textShine {
+            0% {
+                background-position: 0% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        /* Prevent overscroll bounce on mobile */
+        body {
+            overscroll-behavior-y: none;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 22px;
+        }
+
+        .material-symbols-rounded.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        /* Classic White Dots Loading Animation */
+        .dot-flashing {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #C4C7C5;
+            animation: dotFlashing 1s infinite linear alternate;
+        }
+
+        .dot-flashing:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .dot-flashing:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes dotFlashing {
+            0% {
+                background-color: #444746;
+                transform: translateY(0);
+            }
+
+            50%,
+            100% {
+                background-color: #E3E3E3;
+                transform: translateY(-4px);
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="h-full w-full bg-neutral-950 text-geminiPrimaryText font-sans flex items-center justify-center m-0 p-0 overflow-hidden">
+
+    <!-- MAIN APP CONTAINER (Locked Mobile Frame) -->
+    <div
+        class="relative w-full max-w-[430px] h-full sm:h-[92%] sm:max-h-[860px] bg-geminiBg sm:rounded-[40px] sm:border sm:border-geminiBorder overflow-hidden flex flex-col shadow-2xl transition-all">
+
+        <!-- ================= SIDEBAR (Drawer Menu) ================= -->
+        <div id="sidebar"
+            class="absolute inset-y-0 left-0 w-4/5 max-w-[340px] bg-[#1e1f20] border-r border-geminiBorder z-40 transform -translate-x-full transition-transform duration-300 ease-out flex flex-col">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b border-geminiBorder flex items-center justify-between">
+                <span class="font-medium text-sm text-geminiSecondaryText tracking-wider">แชทกลุ่มและห้องสนทนา</span>
+                <button onclick="toggleSidebar()"
+                    class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-geminiSurfaceHover text-geminiSecondaryText">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+
+            <!-- Global Search and Room Buttons -->
+            <div class="p-4 space-y-3">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-3 flex items-center text-geminiSecondaryText">
+                        <span class="material-symbols-rounded text-sm">search</span>
+                    </span>
+                    <input type="text" id="roomSearchInput" placeholder="ค้นหารหัสห้องหรือชื่อกลุ่ม..."
+                        class="w-full bg-geminiBg pl-9 pr-4 py-2 rounded-xl text-xs outline-none border border-geminiBorder focus:border-geminiBlue text-geminiPrimaryText">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="openCreateModal()"
+                        class="flex items-center justify-center gap-1.5 py-2 px-3 bg-geminiBlue text-geminiBg rounded-xl font-medium text-xs hover:bg-[#b9d3fa] transition-colors">
+                        <span class="material-symbols-rounded text-xs filled">add_circle</span>สร้างห้อง
+                    </button>
+                    <button onclick="openJoinModal()"
+                        class="flex items-center justify-center gap-1.5 py-2 px-3 bg-[#333537] text-geminiPrimaryText rounded-xl font-medium text-xs hover:bg-neutral-700 border border-geminiBorder transition-colors">
+                        <span class="material-symbols-rounded text-xs">group</span>เข้าร่วม
+                    </button>
+                </div>
+            </div>
+
+            <!-- Rooms Scroll Area -->
+            <div class="flex-1 overflow-y-auto px-2">
+                <div class="px-3 py-1.5 text-[11px] font-bold tracking-wider text-neutral-500 uppercase">
+                    ห้องที่คุณเข้าร่วม</div>
+                <div id="joinedRoomsList" class="space-y-1">
+                    <!-- Room list dynamic injection -->
+                    <div class="text-xs text-center text-geminiSecondaryText py-6">ยังไม่มีห้องแชท โปรดสร้างหรือเข้าร่วม
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Profile Area (Bottom) -->
+            <div class="p-4 border-t border-geminiBorder bg-geminiBg">
+                <div class="flex items-center gap-2.5">
+                    <div id="userProfileAvatar"
+                        class="w-9 h-9 rounded-full bg-teal-600 flex items-center justify-center font-bold text-sm text-white">
+                        U</div>
+                    <div class="flex-1 min-w-0">
+                        <div id="userProfileName" class="text-xs font-medium text-geminiPrimaryText truncate">...</div>
+                        <span class="text-[10px] text-neutral-500">สถานะ: ออนไลน์</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- เพิ่มกล่องงาน/สินค้าได้ตามต้องการ -->
-      </div>
+        <!-- Sidebar Overlay -->
+        <div id="sidebarOverlay"
+            class="absolute inset-0 bg-black/50 z-30 opacity-0 pointer-events-none transition-opacity duration-300"
+            onclick="toggleSidebar()"></div>
 
-      <div class="contact">
-        ติดต่อผมได้ที่ <a href="mailto:tonox2chyt2@gmail.com">tonox2chyt2@gmail.com</a>
-      </div>
-    </main>
 
-    </body>
-    </html>
+        <!-- ================= LOBBY / SETUP SCREEN ================= -->
+        <div id="setupScreen"
+            class="absolute inset-0 z-30 flex flex-col items-center justify-center p-6 bg-geminiBg transition-opacity duration-300">
+            <div class="flex flex-col items-center mb-10 text-center">
+                <svg width="72" height="72" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    class="mb-4 animate-pulse">
+                    <path
+                        d="M12.0001 0.444336C12.0001 6.82684 17.1731 12.0001 23.5556 12.0001C17.1731 12.0001 12.0001 17.1731 12.0001 23.5556C12.0001 17.1731 6.82736 12.0001 0.444336 12.0001C6.82736 12.0001 12.0001 6.82684 12.0001 0.444336Z"
+                        fill="url(#geminiGrad)" />
+                    <defs>
+                        <linearGradient id="geminiGrad" x1="0.44" y1="12" x2="23.55" y2="12"
+                            gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#4285F4" />
+                            <stop offset="50%" stop-color="#9B72CB" />
+                            <stop offset="100%" stop-color="#D96570" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1 class="text-3xl font-medium tracking-tight">Gemini Group</h1>
+                <p class="text-geminiSecondaryText text-sm mt-1">ห้องคุยกลุ่มและบอร์ดความรู้อัจฉริยะแบบเรียลไทม์</p>
+            </div>
+
+            <div class="w-full space-y-4 max-w-[280px]">
+                <div>
+                    <label
+                        class="block text-xs font-medium text-geminiSecondaryText ml-1 mb-1.5">ชื่อตัวตนของคุณ</label>
+                    <div
+                        class="bg-[#1e1f20] rounded-2xl px-4 py-3 border border-transparent focus-within:border-geminiBorder transition-colors flex items-center">
+                        <span class="material-symbols-rounded text-geminiSecondaryText mr-3 text-base">person</span>
+                        <input type="text" id="userNameInput" placeholder="กรอกชื่อของคุณ..."
+                            class="bg-transparent w-full outline-none text-geminiPrimaryText text-sm">
+                    </div>
+                </div>
+
+                <button onclick="saveIdentity()"
+                    class="w-full bg-geminiBlue text-geminiBg font-medium py-3.5 rounded-full hover:bg-[#b9d3fa] transition-colors mt-2 text-sm">
+                    เข้าสู่ระบบ
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ================= MAIN CHAT AREA ================= -->
+        <div id="mainChatScreen"
+            class="absolute inset-0 z-20 flex flex-col bg-geminiBg opacity-0 pointer-events-none transition-opacity duration-300">
+
+            <!-- Header -->
+            <header
+                class="flex items-center justify-between px-3 h-14 flex-shrink-0 border-b border-geminiBorder/40 bg-geminiBg z-10">
+                <div class="flex items-center gap-1">
+                    <button
+                        class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-geminiSurface text-geminiSecondaryText relative"
+                        onclick="toggleSidebar()">
+                        <span class="material-symbols-rounded">menu</span>
+                        <span id="sidebarAlertDot"
+                            class="absolute top-2.5 right-2.5 w-2 h-2 bg-geminiErrorRed rounded-full hidden"></span>
+                    </button>
+
+                    <!-- AI Model Selector -->
+                    <button id="modelBtn" onclick="toggleModelDropdown()"
+                        class="flex items-center gap-1 hover:bg-geminiSurface px-2.5 py-1.5 rounded-lg transition-colors">
+                        <span id="currentModelDisplay" class="font-medium text-sm text-geminiSecondaryText">Gemini 2.5
+                            Flash</span>
+                        <span class="material-symbols-rounded text-base text-geminiSecondaryText">arrow_drop_down</span>
+                    </button>
+                </div>
+
+                <!-- Active Room Profile (Clickable for Settings) -->
+                <button onclick="openGroupSettings()"
+                    class="flex items-center gap-2 hover:bg-geminiSurface px-2 py-1 rounded-xl transition-colors cursor-pointer group text-right">
+                    <div class="flex flex-col items-end">
+                        <span id="activeRoomTitle"
+                            class="text-xs font-semibold text-geminiPrimaryText truncate max-w-[100px] group-hover:text-geminiBlue transition-colors">ห้องส่วนกลาง</span>
+                        <span id="roomCodeBadge"
+                            class="text-[9px] text-geminiSecondaryText flex items-center gap-0.5"><span
+                                class="material-symbols-rounded" style="font-size:10px">settings</span>
+                            ตั้งค่ากลุ่ม</span>
+                    </div>
+                    <div id="activeRoomAvatar"
+                        class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white shadow-inner overflow-hidden border border-geminiBorder">
+                        <!-- Avatar initals or image goes here -->
+                        G
+                    </div>
+                </button>
+            </header>
+
+            <!-- API warning banner -->
+            <div id="apiWarningBanner"
+                class="bg-amber-950/40 border-b border-amber-500/20 px-4 py-2 flex items-center justify-between text-amber-200 text-xs hidden cursor-pointer"
+                onclick="openGroupSettings()">
+                <span class="truncate pr-2 flex items-center gap-1">
+                    <span class="material-symbols-rounded text-xs text-amber-500 filled font-bold">warning</span>
+                    ยังไม่มี API Key (กดที่รูปปกกลุ่มเพื่อใส่คีย์)
+                </span>
+            </div>
+
+            <!-- Model Selection Dropdown Menu -->
+            <div id="modelDropdown"
+                class="absolute top-13 left-13 bg-[#1e1f20] border border-[#333537] rounded-xl p-1.5 w-52 shadow-xl hidden z-50 flex-col gap-1">
+                <button onclick="selectModel('gemini-2.5-flash', 'Gemini 2.5 Flash')"
+                    class="flex items-center justify-between px-3 py-2 hover:bg-geminiSurfaceHover rounded-lg w-full text-left text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-rounded text-base text-geminiBlue">bolt</span>
+                        <span class="text-geminiPrimaryText font-medium">Gemini 2.5 Flash</span>
+                    </div>
+                    <span class="text-[10px] bg-neutral-800 text-geminiBlue px-1 py-0.5 rounded">เร็ว</span>
+                </button>
+                <button onclick="selectModel('gemini-2.5-pro', 'Gemini 2.5 Pro')"
+                    class="flex items-center justify-between px-3 py-2 hover:bg-geminiSurfaceHover rounded-lg w-full text-left text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-rounded text-base text-purple-400">magic_button</span>
+                        <span class="text-geminiPrimaryText font-medium">Gemini 2.5 Pro</span>
+                    </div>
+                    <span class="text-[10px] bg-neutral-800 text-purple-400 px-1 py-0.5 rounded">ฉลาด</span>
+                </button>
+                <button onclick="selectModel('gemini-3.1-flash-image-preview', 'สร้างรูปภาพ AI')"
+                    class="flex items-center justify-between px-3 py-2 hover:bg-geminiSurfaceHover rounded-lg w-full text-left text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-rounded text-base text-pink-400">palette</span>
+                        <span class="text-geminiPrimaryText font-medium">โมเดลวาดภาพ</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Chat Viewport -->
+            <div id="chatViewport" class="flex-1 overflow-y-auto px-4 pb-4 flex flex-col">
+
+                <!-- Welcome/Intro Home view -->
+                <div id="welcomeState" class="flex flex-col mt-12 mb-8 px-1">
+                    <h2 class="text-[32px] font-medium leading-tight mb-2 tracking-tight">
+                        <span class="gemini-gradient-text" id="greetingName">สวัสดี</span><br>
+                        <span class="text-[#444746] font-normal">มาเริ่มสนทนากลุ่มกันเถอะ</span>
+                    </h2>
+                </div>
+
+                <!-- Messages Stream List -->
+                <div id="messageList" class="flex flex-col gap-6 py-4"></div>
+
+                <!-- Others typing indicator stream container -->
+                <div id="othersTypingArea" class="flex flex-col gap-1 text-[11px] text-neutral-500 pl-8 mb-2"></div>
+
+            </div>
+
+            <!-- Bottom Input Field Pill Container -->
+            <div class="px-4 pb-4 pt-1 bg-geminiBg w-full flex-shrink-0 relative">
+
+                <!-- Image Attachment Preview Box -->
+                <div id="attachmentPreview" class="hidden mb-3 ml-2 flex items-center gap-2">
+                    <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-geminiBorder shadow-lg">
+                        <img id="previewImageElement" src="" class="w-full h-full object-cover" alt="Preview">
+                        <button onclick="clearAttachment()"
+                            class="absolute top-1 right-1 w-5 h-5 bg-black/70 rounded-full flex items-center justify-center text-white hover:bg-black transition-colors">
+                            <span class="material-symbols-rounded text-[14px]">close</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Input Field -->
+                <div
+                    class="bg-geminiSurface rounded-[28px] pr-2 pl-1.5 py-1 flex items-end min-h-[52px] focus-within:bg-[#252628] transition-colors border border-geminiBorder/40">
+
+                    <input type="file" id="imageUploadInput" accept="image/*" class="hidden"
+                        onchange="handleImageSelection(event)">
+                    <button onclick="document.getElementById('imageUploadInput').click()"
+                        class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-geminiSecondaryText hover:text-geminiPrimaryText hover:bg-white/5 rounded-full transition-colors mb-0.5">
+                        <span class="material-symbols-rounded">add_photo_alternate</span>
+                    </button>
+
+                    <textarea id="chatInput" rows="1" placeholder="พิมพ์ข้อความในกลุ่ม..."
+                        class="flex-1 bg-transparent text-geminiPrimaryText placeholder-neutral-500 outline-none resize-none py-3 px-2 max-h-[120px] text-sm leading-relaxed"
+                        oninput="handleInputState(this)"></textarea>
+
+                    <button id="sendActionBtn" onclick="handleSendClick()"
+                        class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-geminiSecondaryText hover:bg-white/5 rounded-full transition-colors mb-0.5">
+                        <span id="sendActionIcon" class="material-symbols-rounded">mic</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= MODAL: CREATE ROOM ================= -->
+        <div id="createRoomModal"
+            class="absolute inset-0 bg-black/65 z-50 flex items-center justify-center p-6 opacity-0 pointer-events-none transition-opacity duration-300">
+            <div
+                class="bg-geminiSurface rounded-[24px] border border-geminiBorder w-full max-w-[320px] p-5 space-y-4 shadow-2xl">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-medium text-sm text-geminiPrimaryText">สร้างห้องแชทใหม่</span>
+                    <button onclick="closeModal('createRoomModal')"
+                        class="text-geminiSecondaryText hover:text-white"><span
+                            class="material-symbols-rounded">close</span></button>
+                </div>
+
+                <!-- Circular Upload Avatar -->
+                <div class="flex flex-col items-center justify-center mb-1">
+                    <div class="relative w-16 h-16 rounded-full bg-geminiBg border border-geminiBorder overflow-hidden cursor-pointer flex items-center justify-center hover:bg-[#333537] transition-colors"
+                        onclick="document.getElementById('roomAvatarUpload').click()">
+                        <img id="roomAvatarPreview" src="" class="hidden w-full h-full object-cover">
+                        <span class="material-symbols-rounded text-geminiSecondaryText text-2xl"
+                            id="roomAvatarIcon">add_a_photo</span>
+                    </div>
+                    <span class="text-[10px] text-geminiSecondaryText mt-1.5">กดเพื่อตั้งรูปปกกลุ่ม (ถ้ามี)</span>
+                    <input type="file" id="roomAvatarUpload" accept="image/*" class="hidden"
+                        onchange="handleRoomAvatarUpload(event)">
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-geminiSecondaryText mb-1">ชื่อห้องคุย</label>
+                        <input type="text" id="newRoomName" placeholder="เช่น แก็งค์คุณพ่อ, ครอบครัวตัวดี"
+                            class="w-full bg-geminiBg px-3 py-2.5 rounded-xl text-xs outline-none border border-geminiBorder focus:border-geminiBlue text-geminiPrimaryText">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-geminiSecondaryText mb-1">ระบุจำนวนคนสูงสุด
+                            (พิมพ์ตัวเลข)</label>
+                        <input type="number" id="newRoomMax" placeholder="2-100" value="10"
+                            oninput="validateMemberLimit()"
+                            class="w-full bg-geminiBg px-3 py-2.5 rounded-xl text-xs outline-none border border-geminiBorder focus:border-geminiBlue text-geminiPrimaryText">
+                        <p id="memberWarning" class="text-geminiErrorRed text-[10px] mt-1 hidden font-medium">⚠️
+                            จำนวนคนต้องอยู่ระหว่าง 2 ถึง 100 คน</p>
+                    </div>
+                </div>
+
+                <button id="btnSubmitCreate" onclick="submitCreateRoom()"
+                    class="w-full bg-geminiBlue text-geminiBg font-semibold py-3 rounded-xl hover:bg-[#b9d3fa] text-xs transition-colors mt-2">
+                    สร้างห้องสนทนา
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= MODAL: JOIN ROOM ================= -->
+        <div id="joinRoomModal"
+            class="absolute inset-0 bg-black/65 z-50 flex items-center justify-center p-6 opacity-0 pointer-events-none transition-opacity duration-300">
+            <div
+                class="bg-geminiSurface rounded-[24px] border border-geminiBorder w-full max-w-[320px] p-5 space-y-4 shadow-2xl">
+                <div class="flex items-center justify-between">
+                    <span class="font-medium text-sm text-geminiPrimaryText">เข้าร่วมกลุ่มสนทนา</span>
+                    <button onclick="closeModal('joinRoomModal')"
+                        class="text-geminiSecondaryText hover:text-white"><span
+                            class="material-symbols-rounded">close</span></button>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-geminiSecondaryText mb-1">ระบุรหัสห้อง (Room
+                            Code)</label>
+                        <input type="text" id="joinRoomCode" placeholder="เช่น GEM-XXXX"
+                            class="w-full bg-geminiBg px-3 py-2.5 rounded-xl text-xs outline-none border border-geminiBorder focus:border-geminiBlue text-geminiPrimaryText uppercase tracking-wider">
+                    </div>
+                </div>
+
+                <button onclick="submitJoinRoom()"
+                    class="w-full bg-geminiBlue text-geminiBg font-semibold py-3 rounded-xl hover:bg-[#b9d3fa] text-xs transition-colors mt-2">
+                    ตรวจสอบรหัสแล้วเข้าร่วม
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= MODAL: GROUP SETTINGS (API KEY) ================= -->
+        <div id="groupSettingsModal"
+            class="absolute inset-0 bg-black/75 z-50 flex flex-col items-center justify-end sm:justify-center p-0 sm:p-6 opacity-0 pointer-events-none transition-opacity duration-300">
+            <div
+                class="bg-geminiSurface sm:rounded-[24px] rounded-t-[24px] border border-geminiBorder w-full max-w-[430px] p-5 space-y-4 shadow-2xl pb-10 sm:pb-5">
+                <div class="flex items-center justify-between border-b border-geminiBorder/40 pb-3">
+                    <span class="font-medium text-sm text-geminiPrimaryText flex items-center gap-1.5">
+                        <span class="material-symbols-rounded text-lg">settings</span> ตั้งค่ากลุ่ม & เชื่อมต่อ AI
+                    </span>
+                    <button onclick="closeModal('groupSettingsModal')"
+                        class="text-geminiSecondaryText hover:text-white"><span
+                            class="material-symbols-rounded">close</span></button>
+                </div>
+
+                <div
+                    class="flex justify-between items-center bg-geminiBg px-3 py-2 rounded-xl border border-geminiBorder/40">
+                    <div>
+                        <div class="text-[10px] text-geminiSecondaryText">รหัสห้อง (Room Code)</div>
+                        <div id="settingsRoomCodeDisplay"
+                            class="text-sm font-semibold text-geminiPrimaryText tracking-wider">LOBBY</div>
+                    </div>
+                    <button onclick="copyRoomCode()"
+                        class="text-[11px] bg-geminiSurfaceHover px-2 py-1.5 rounded-lg text-geminiPrimaryText font-medium active:bg-neutral-600">คัดลอกรหัส</button>
+                </div>
+
+                <div class="space-y-4 pt-2">
+                    <!-- Standard Text/Vision API Key -->
+                    <div>
+                        <label class="text-[11px] font-medium text-[#A8C7FA] mb-1.5 flex items-center gap-1">
+                            <span class="material-symbols-rounded text-xs">vpn_key</span> Gemini API Key
+                            (สำหรับข้อความและภาพ)
+                        </label>
+                        <input type="password" id="modalApiKeyInput" placeholder="วางคีย์ AIzaSy... ที่นี่"
+                            class="w-full bg-geminiBg px-3 py-2.5 rounded-xl text-xs outline-none border border-geminiBorder focus:border-geminiBlue text-geminiPrimaryText placeholder-neutral-600 font-mono tracking-widest">
+                        <p class="text-[9px] text-geminiSecondaryText mt-1 pl-1">
+                            พิมพ์หรือวางคีย์นี้เพื่อใช้งานโมเดลแชทและวิเคราะห์รูป</p>
+                    </div>
+
+                    <!-- Specific Image Generation API Key -->
+                    <div>
+                        <label class="text-[11px] font-medium text-pink-400 mb-1.5 flex items-center gap-1">
+                            <span class="material-symbols-rounded text-xs">palette</span> Image API Key
+                            (สำหรับระบบวาดภาพแยก)
+                        </label>
+                        <input type="password" id="modalImageKeyInput" placeholder="วางคีย์สำหรับสร้างรูป..."
+                            class="w-full bg-geminiBg px-3 py-2.5 rounded-xl text-xs outline-none border border-geminiBorder focus:border-pink-400 text-geminiPrimaryText placeholder-neutral-600 font-mono tracking-widest">
+                    </div>
+                </div>
+
+                <button onclick="saveApiKeysAndClose()"
+                    class="w-full bg-geminiPrimaryText text-geminiBg font-semibold py-3 rounded-xl hover:bg-white text-xs transition-colors mt-4">
+                    บันทึกและยืนยันคีย์
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK Imports (ESM Modules) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, updateDoc, addDoc, getDoc, getDocs, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // APP ID & CONFIG
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'gemini-world-group';
+        let firebaseConfig = null;
+        try {
+            firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        } catch (e) { console.warn("No Firebase configuration injected."); }
+
+        // Core App States
+        const state = {
+            db: null,
+            auth: null,
+            isOnline: false,
+            userId: localStorage.getItem('gemini_user_id') || crypto.randomUUID(),
+            userName: localStorage.getItem('gemini_user_name') || '',
+            apiKey: localStorage.getItem('gemini_api_key') || '',
+            imageApiKey: localStorage.getItem('gemini_image_api_key') || '',
+            selectedModel: 'gemini-2.5-flash',
+            currentRoomId: 'gemini-lobby',
+            activeRoomObj: { name: 'ห้องส่วนกลาง', code: 'LOBBY', avatarColor: '#6366f1', base64Avatar: null },
+            roomsCache: [],
+            messagesCache: [],
+            attachedImageBase64: null,
+            uploadedRoomAvatar: null, // Temp holder for new room
+            isTypingTimeout: null,
+            activeTypingListeners: {}
+        };
+
+        // Cache User ID
+        localStorage.setItem('gemini_user_id', state.userId);
+
+        // UI Target Components
+        const ui = {
+            setup: document.getElementById('setupScreen'),
+            chat: document.getElementById('mainChatScreen'),
+            sidebar: document.getElementById('sidebar'),
+            overlay: document.getElementById('sidebarOverlay'),
+            nameInput: document.getElementById('userNameInput'),
+            messageList: document.getElementById('messageList'),
+            chatInput: document.getElementById('chatInput'),
+            actionIcon: document.getElementById('sendActionIcon'),
+            viewport: document.getElementById('chatViewport'),
+            welcome: document.getElementById('welcomeState'),
+            modelDropdown: document.getElementById('modelDropdown'),
+            previewBox: document.getElementById('attachmentPreview'),
+            previewImg: document.getElementById('previewImageElement'),
+            apiWarning: document.getElementById('apiWarningBanner'),
+            typingArea: document.getElementById('othersTypingArea'),
+            sidebarAlert: document.getElementById('sidebarAlertDot')
+        };
+
+        // Validate initial API key state
+        function checkApiBanner() {
+            if (state.apiKey) {
+                ui.apiWarning.classList.add('hidden');
+                ui.sidebarAlert.classList.add('hidden');
+            } else {
+                ui.apiWarning.classList.remove('hidden');
+                ui.sidebarAlert.classList.remove('hidden');
+            }
+        }
+        checkApiBanner();
+
+        // Firebase Initialization
+        async function startDatabase() {
+            if (!firebaseConfig) {
+                console.warn("Running in Offline Sandbox Mode");
+                renderActiveLayout();
+                return;
+            }
+            try {
+                const app = initializeApp(firebaseConfig);
+                state.db = getFirestore(app);
+                state.auth = getAuth(app);
+
+                await signInAnonymously(state.auth);
+                state.userId = state.auth.currentUser?.uid || state.userId;
+                state.isOnline = true;
+
+                console.log("Database initialized cleanly");
+                renderActiveLayout();
+            } catch (e) {
+                console.error("Database connection failed:", e);
+                renderActiveLayout(); // Fallback
+            }
+        }
+
+        function renderActiveLayout() {
+            if (state.userName) {
+                ui.setup.classList.add('opacity-0', 'pointer-events-none');
+                ui.chat.classList.remove('opacity-0', 'pointer-events-none');
+
+                document.getElementById('greetingName').textContent = `สวัสดีคุณ ${state.userName}`;
+                document.getElementById('userProfileAvatar').textContent = state.userName.charAt(0).toUpperCase();
+                document.getElementById('userProfileName').textContent = state.userName;
+
+                syncRooms();
+                listenToMessages(state.currentRoomId);
+            }
+        }
+
+        // Global functions for user actions
+        window.saveIdentity = () => {
+            const name = ui.nameInput.value.trim();
+            if (!name) { ui.nameInput.focus(); return; }
+            state.userName = name;
+            localStorage.setItem('gemini_user_name', name);
+
+            ui.setup.classList.add('opacity-0', 'pointer-events-none');
+            ui.chat.classList.remove('opacity-0', 'pointer-events-none');
+
+            renderActiveLayout();
+        };
+
+        window.toggleSidebar = () => {
+            const opened = ui.sidebar.classList.contains('translate-x-0');
+            if (opened) {
+                ui.sidebar.classList.remove('translate-x-0');
+                ui.sidebar.classList.add('-translate-x-full');
+                ui.overlay.classList.remove('opacity-100');
+                ui.overlay.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                ui.sidebar.classList.remove('-translate-x-full');
+                ui.sidebar.classList.add('translate-x-0');
+                ui.overlay.classList.remove('opacity-0', 'pointer-events-none');
+                ui.overlay.classList.add('opacity-100');
+            }
+        };
+
+        window.toggleModelDropdown = () => {
+            ui.modelDropdown.classList.toggle('hidden');
+            ui.modelDropdown.classList.toggle('flex');
+        };
+
+        window.selectModel = (modelId, label) => {
+            state.selectedModel = modelId;
+            document.getElementById('currentModelDisplay').textContent = label;
+            ui.modelDropdown.classList.add('hidden');
+            ui.modelDropdown.classList.remove('flex');
+        };
+
+        // Modals handler
+        window.openCreateModal = () => {
+            document.getElementById('createRoomModal').classList.remove('opacity-0', 'pointer-events-none');
+            state.uploadedRoomAvatar = null;
+            document.getElementById('roomAvatarPreview').src = '';
+            document.getElementById('roomAvatarPreview').classList.add('hidden');
+            document.getElementById('roomAvatarIcon').classList.remove('hidden');
+            document.getElementById('memberWarning').classList.add('hidden');
+            document.getElementById('newRoomMax').value = "10";
+            document.getElementById('newRoomName').value = "";
+        };
+        window.openJoinModal = () => {
+            document.getElementById('joinRoomModal').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('joinRoomCode').value = '';
+        };
+        window.openGroupSettings = () => {
+            document.getElementById('settingsRoomCodeDisplay').textContent = state.activeRoomObj.code;
+            document.getElementById('modalApiKeyInput').value = state.apiKey;
+            document.getElementById('modalImageKeyInput').value = state.imageApiKey;
+            document.getElementById('groupSettingsModal').classList.remove('opacity-0', 'pointer-events-none');
+        };
+        window.closeModal = (id) => {
+            document.getElementById(id).classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        // Settings Modal Save logic (Require confirm button click)
+        window.saveApiKeysAndClose = () => {
+            const mainKey = document.getElementById('modalApiKeyInput').value.trim();
+            const imgKey = document.getElementById('modalImageKeyInput').value.trim();
+
+            state.apiKey = mainKey;
+            state.imageApiKey = imgKey;
+
+            localStorage.setItem('gemini_api_key', mainKey);
+            localStorage.setItem('gemini_image_api_key', imgKey);
+
+            checkApiBanner();
+            closeModal('groupSettingsModal');
+        };
+
+        // Room avatar upload handler
+        window.handleRoomAvatarUpload = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                state.uploadedRoomAvatar = e.target.result;
+                const imgEl = document.getElementById('roomAvatarPreview');
+                imgEl.src = state.uploadedRoomAvatar;
+                imgEl.classList.remove('hidden');
+                document.getElementById('roomAvatarIcon').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Validate member limit logic
+        window.validateMemberLimit = () => {
+            const val = parseInt(document.getElementById('newRoomMax').value);
+            const warning = document.getElementById('memberWarning');
+            const btn = document.getElementById('btnSubmitCreate');
+
+            if (isNaN(val) || val < 2 || val > 100) {
+                warning.classList.remove('hidden');
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                return false;
+            } else {
+                warning.classList.add('hidden');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                return true;
+            }
+        };
+
+        // Create Room logic
+        window.submitCreateRoom = async () => {
+            if (!validateMemberLimit()) return;
+
+            const roomName = document.getElementById('newRoomName').value.trim();
+            const maxMems = parseInt(document.getElementById('newRoomMax').value);
+
+            if (!roomName) { document.getElementById('newRoomName').focus(); return; }
+
+            const randomCode = `GEM-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+            const roomObj = {
+                id: randomCode,
+                name: roomName,
+                code: randomCode,
+                avatarColor: '#1e293b', // Default fallback color
+                base64Avatar: state.uploadedRoomAvatar,
+                maxMembers: maxMems,
+                creatorId: state.userId,
+                timestamp: Date.now()
+            };
+
+            if (state.isOnline) {
+                const path = `/artifacts/${appId}/public/data/rooms`;
+                await setDoc(doc(state.db, path, randomCode), roomObj);
+            } else {
+                state.roomsCache.push(roomObj);
+                renderRooms();
+            }
+
+            closeModal('createRoomModal');
+            switchRoom(randomCode);
+        };
+
+        // Join room by code
+        window.submitJoinRoom = async () => {
+            const rawCode = document.getElementById('joinRoomCode').value.trim().toUpperCase();
+            if (!rawCode) { document.getElementById('joinRoomCode').focus(); return; }
+
+            if (state.isOnline) {
+                const path = `/artifacts/${appId}/public/data/rooms`;
+                const docRef = doc(state.db, path, rawCode);
+                const snapshot = await getDoc(docRef);
+
+                if (snapshot.exists()) {
+                    closeModal('joinRoomModal');
+                    switchRoom(rawCode);
+                } else {
+                    alert("ไม่พบกลุ่มหรือรหัสนี้ถูกลบแล้ว โปรดตรวจสอบอีกครั้ง");
+                }
+            } else {
+                alert("ระบบออฟไลน์อยู่ ไม่สามารถค้นหาห้องได้");
+            }
+        };
+
+        window.copyRoomCode = () => {
+            navigator.clipboard.writeText(state.activeRoomObj.code);
+            alert("คัดลอกรหัสห้องแชทแล้ว: " + state.activeRoomObj.code);
+        };
+
+        // Sync rooms
+        function syncRooms() {
+            if (!state.isOnline) return;
+            const path = `/artifacts/${appId}/public/data/rooms`;
+            onSnapshot(collection(state.db, path), (snapshot) => {
+                const loaded = [];
+                snapshot.forEach(doc => {
+                    loaded.push(doc.data());
+                });
+                loaded.sort((a, b) => b.timestamp - a.timestamp);
+                state.roomsCache = loaded;
+                renderRooms();
+            }, (err) => console.error("Room Syncing failed:", err));
+        }
+
+        function renderRooms() {
+            const listContainer = document.getElementById('joinedRoomsList');
+            listContainer.innerHTML = '';
+
+            const defaultLobby = `
+                <div onclick="switchRoom('gemini-lobby')" class="flex items-center gap-2.5 p-2 rounded-xl cursor-pointer hover:bg-geminiSurfaceHover transition-colors ${state.currentRoomId === 'gemini-lobby' ? 'bg-geminiSurface' : ''}">
+                    <div class="w-8 h-8 rounded-full bg-[#6366f1] flex items-center justify-center text-xs font-bold text-white">G</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs font-medium text-geminiPrimaryText truncate">ห้องส่วนกลาง</div>
+                        <span class="text-[9px] text-neutral-500">รหัส: LOBBY</span>
+                    </div>
+                </div>`;
+            listContainer.insertAdjacentHTML('beforeend', defaultLobby);
+
+            state.roomsCache.forEach(r => {
+                const isActive = state.currentRoomId === r.id;
+
+                let avatarHtml = '';
+                if (r.base64Avatar) {
+                    avatarHtml = `<img src="${r.base64Avatar}" class="w-8 h-8 rounded-full object-cover">`;
+                } else {
+                    avatarHtml = `<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">${r.name.charAt(0).toUpperCase()}</div>`;
+                }
+
+                const html = `
+                    <div onclick="switchRoom('${r.id}')" class="flex items-center gap-2.5 p-2 rounded-xl cursor-pointer hover:bg-geminiSurfaceHover transition-colors ${isActive ? 'bg-geminiSurface' : ''}">
+                        ${avatarHtml}
+                        <div class="flex-1 min-w-0">
+                            <div class="text-xs font-medium text-geminiPrimaryText truncate">${r.name}</div>
+                            <span class="text-[9px] text-neutral-500">รหัส: ${r.code}</span>
+                        </div>
+                    </div>`;
+                listContainer.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        let unsubscribeMessages = null;
+        async function switchRoom(roomId) {
+            state.currentRoomId = roomId;
+
+            if (roomId === 'gemini-lobby') {
+                state.activeRoomObj = { name: 'ห้องส่วนกลาง', code: 'LOBBY', avatarColor: '#6366f1', base64Avatar: null };
+            } else {
+                const found = state.roomsCache.find(r => r.id === roomId);
+                if (found) state.activeRoomObj = found;
+            }
+
+            document.getElementById('activeRoomTitle').textContent = state.activeRoomObj.name;
+
+            const avatar = document.getElementById('activeRoomAvatar');
+            if (state.activeRoomObj.base64Avatar) {
+                avatar.innerHTML = `<img src="${state.activeRoomObj.base64Avatar}" class="w-full h-full object-cover">`;
+            } else {
+                avatar.innerHTML = state.activeRoomObj.name.charAt(0).toUpperCase();
+                avatar.style.backgroundColor = state.activeRoomObj.avatarColor || '#334155';
+            }
+
+            ui.chatInput.value = '';
+            clearAttachment();
+
+            renderRooms();
+            listenToMessages(roomId);
+            toggleSidebar();
+        }
+
+        function listenToMessages(roomId) {
+            if (unsubscribeMessages) unsubscribeMessages();
+            if (!state.isOnline) return;
+
+            const path = `/artifacts/${appId}/public/data/messages`;
+            const q = query(collection(state.db, path), where("roomId", "==", roomId));
+
+            unsubscribeMessages = onSnapshot(q, (snapshot) => {
+                const msgs = [];
+                snapshot.forEach(doc => {
+                    msgs.push(doc.data());
+                });
+                msgs.sort((a, b) => a.timestamp - b.timestamp);
+                state.messagesCache = msgs;
+                renderMessages();
+            }, (err) => console.error("Failed to read messages", err));
+
+            syncTypingIndicators(roomId);
+        }
+
+        function renderMessages() {
+            if (state.messagesCache.length > 0) ui.welcome.style.display = 'none';
+            else ui.welcome.style.display = 'flex';
+
+            ui.messageList.innerHTML = '';
+
+            state.messagesCache.forEach(msg => {
+                const isMe = msg.senderId === state.userId;
+                const isAI = msg.senderId === 'gemini';
+
+                let html = '';
+                if (isAI) {
+                    html = `
+                    <div class="flex gap-3 px-1 w-full max-w-full">
+                        <div class="flex-shrink-0 pt-0.5">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.0001 0.444336C12.0001 6.82684 17.1731 12.0001 23.5556 12.0001C17.1731 12.0001 12.0001 17.1731 12.0001 23.5556C12.0001 17.1731 6.82736 12.0001 0.444336 12.0001C6.82736 12.0001 12.0001 6.82684 12.0001 0.444336Z" fill="#A8C7FA"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0 pb-1 text-geminiPrimaryText text-sm leading-relaxed break-words font-normal">
+                            ${formatMarkdown(msg.text)}
+                            ${msg.imageUrl ? `<img src="${msg.imageUrl}" class="w-full max-w-[280px] rounded-2xl mt-3 shadow-md border border-geminiBorder" alt="Generated by AI"/>` : ''}
+                        </div>
+                    </div>`;
+                } else {
+                    html = `
+                    <div class="flex flex-col items-${isMe ? 'end' : 'start'} px-1 w-full mb-1">
+                        <span class="text-[10px] text-neutral-500 mb-0.5 px-2">${isMe ? 'คุณ' : msg.senderName}</span>
+                        <div class="${isMe ? 'bg-geminiSurfaceHover border border-geminiBorder/30 text-geminiPrimaryText' : 'bg-geminiSurface text-geminiPrimaryText'} px-4 py-2.5 rounded-2xl max-w-[85%] text-sm leading-snug break-words shadow-sm">
+                            ${msg.attachedImage ? `<img src="${msg.attachedImage}" class="w-full max-w-[220px] rounded-xl mb-2" alt="Attachment"/>` : ''}
+                            ${msg.text ? `<div>${msg.text}</div>` : ''}
+                        </div>
+                    </div>`;
+                }
+
+                ui.messageList.insertAdjacentHTML('beforeend', html);
+            });
+
+            ui.viewport.scrollTo({ top: ui.viewport.scrollHeight, behavior: 'smooth' });
+        }
+
+        function formatMarkdown(text) {
+            if (!text) return "";
+            let html = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em class="text-geminiSecondaryText">$1</em>');
+            html = html.replace(/\n/g, '<br/>');
+            return html;
+        }
+
+        window.handleInputState = (el) => {
+            el.style.height = 'auto';
+            el.style.height = el.scrollHeight + 'px';
+
+            const trimmed = el.value.trim();
+            if (trimmed || state.attachedImageBase64) {
+                ui.actionIcon.textContent = 'send';
+                ui.actionIcon.classList.add('text-geminiBlue');
+                ui.actionIcon.classList.remove('text-geminiSecondaryText');
+            } else {
+                ui.actionIcon.textContent = 'mic';
+                ui.actionIcon.classList.remove('text-geminiBlue');
+                ui.actionIcon.classList.add('text-geminiSecondaryText');
+                el.style.height = '48px';
+            }
+
+            triggerTypingBroadcast();
+        };
+
+        function triggerTypingBroadcast() {
+            if (!state.isOnline || !state.currentRoomId) return;
+
+            const path = `/artifacts/${appId}/public/data/typing`;
+            const docId = `${state.currentRoomId}_${state.userId}`;
+
+            setDoc(doc(state.db, path, docId), {
+                roomId: state.currentRoomId,
+                userId: state.userId,
+                userName: state.userName,
+                timestamp: Date.now()
+            });
+
+            clearTimeout(state.isTypingTimeout);
+            state.isTypingTimeout = setTimeout(async () => {
+                await setDoc(doc(state.db, path, docId), {
+                    roomId: state.currentRoomId,
+                    userId: state.userId,
+                    userName: '',
+                    timestamp: 0
+                });
+            }, 2500);
+        }
+
+        let typingUnsubscribe = null;
+        function syncTypingIndicators(roomId) {
+            if (typingUnsubscribe) typingUnsubscribe();
+            if (!state.isOnline) return;
+
+            const path = `/artifacts/${appId}/public/data/typing`;
+            const q = query(collection(state.db, path), where("roomId", "==", roomId));
+
+            typingUnsubscribe = onSnapshot(q, (snapshot) => {
+                ui.typingArea.innerHTML = '';
+                const users = [];
+                snapshot.forEach(doc => {
+                    const d = doc.data();
+                    if (d.userId !== state.userId && d.userName && (Date.now() - d.timestamp < 4000)) {
+                        users.push(d.userName);
+                    }
+                });
+
+                if (users.length > 0) {
+                    const label = users.join(', ') + ' กำลังพิมพ์...';
+                    ui.typingArea.innerHTML = `<span class="italic text-[11px]">${label}</span>`;
+                }
+            });
+        }
+
+        window.handleSendClick = () => {
+            const text = ui.chatInput.value.trim();
+            if (!text && !state.attachedImageBase64) return;
+            sendMessage(text);
+        };
+
+        async function sendMessage(text) {
+            const attachedImg = state.attachedImageBase64;
+
+            ui.chatInput.value = '';
+            handleInputState(ui.chatInput);
+            clearAttachment();
+
+            const messageObj = {
+                roomId: state.currentRoomId,
+                senderId: state.userId,
+                senderName: state.userName,
+                text: text,
+                attachedImage: attachedImg,
+                timestamp: Date.now()
+            };
+
+            if (state.isOnline) {
+                const path = `/artifacts/${appId}/public/data/messages`;
+                await addDoc(collection(state.db, path), messageObj);
+            } else {
+                state.messagesCache.push(messageObj);
+                renderMessages();
+            }
+
+            if (!state.apiKey) {
+                setTimeout(() => openGroupSettings(), 500);
+                return;
+            }
+
+            showClassicDotsLoading();
+            await requestAIGeminiProcessing(text, attachedImg);
+        }
+
+        // Classic White Dots Indicator
+        function showClassicDotsLoading() {
+            ui.welcome.style.display = 'none';
+            const html = `
+                <div id="geminiLoaderDots" class="flex gap-3 px-1 w-full">
+                    <div class="flex-shrink-0 pt-0.5">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-60">
+                            <path d="M12.0001 0.444336C12.0001 6.82684 17.1731 12.0001 23.5556 12.0001C17.1731 12.0001 12.0001 17.1731 12.0001 23.5556C12.0001 17.1731 6.82736 12.0001 0.444336 12.0001C6.82736 12.0001 12.0001 6.82684 12.0001 0.444336Z" fill="#C4C7C5"/>
+                        </svg>
+                    </div>
+                    <div class="bg-geminiSurface px-4 py-3 rounded-2xl flex items-center justify-center gap-1.5 shadow-sm border border-geminiBorder/30">
+                        <div class="dot-flashing"></div>
+                        <div class="dot-flashing"></div>
+                        <div class="dot-flashing"></div>
+                    </div>
+                </div>`;
+            ui.messageList.insertAdjacentHTML('beforeend', html);
+            ui.viewport.scrollTo({ top: ui.viewport.scrollHeight, behavior: 'smooth' });
+        }
+
+        function removeGeneratingWave() {
+            const wave = document.getElementById('geminiLoaderDots');
+            if (wave) wave.remove();
+        }
+
+        async function requestAIGeminiProcessing(userText, imageBase64) {
+            let replyText = "เกิดข้อผิดพลาดในการเชื่อมต่อระบบปัญญาประดิษฐ์";
+            let generatedImg = null;
+
+            const isImageGeneratorMode = state.selectedModel === 'gemini-3.1-flash-image-preview';
+
+            // Check specific key for image generation if selected
+            const activeKey = (isImageGeneratorMode && state.imageApiKey) ? state.imageApiKey : state.apiKey;
+
+            try {
+                if (isImageGeneratorMode) {
+                    if (!activeKey) {
+                        replyText = "กรุณาใส่ API Key สำหรับการสร้างภาพในหน้าตั้งค่ากลุ่มก่อนครับ";
+                        removeGeneratingWave();
+                        saveToDB(replyText, null);
+                        return;
+                    }
+
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent?key=${activeKey}`;
+                    const payload = {
+                        contents: [{ role: 'user', parts: [{ text: userText || "รูปภาพพรีเมียม" }] }],
+                        generationConfig: { responseModalities: ['IMAGE'] }
+                    };
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await response.json();
+
+                    const part = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+                    if (part) {
+                        generatedImg = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+                        replyText = "**สร้างภาพสำเร็จแล้วครับ!** ลองดูผลลัพธ์นี้เลยครับ:";
+                    } else {
+                        replyText = "โมเดลไม่สามารถสร้างภาพได้ ณ ขณะนี้ อาจเกิดจากการตั้งค่าหรือเนื้อหาไม่เหมาะสม ลองระบุข้อความใหม่อีกครั้งครับ";
+                    }
+                } else {
+                    const activeModel = state.selectedModel === 'gemini-2.5-pro' ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${activeKey}`;
+
+                    const filteredHist = state.messagesCache.slice(-6).map(m => `${m.senderName}: ${m.text}`).join('\n');
+                    const fullSystemPrompt = `คุณคือผู้ช่วย Gemini อัจฉริยะในห้องแชทครอบครัว ตอบสนองเป็นภาษาไทยอย่างอบอุ่น สุภาพ และเข้าใจง่าย\nบริบทก่อนหน้า:\n${filteredHist}\n\nคำถามล่าสุดจาก ${state.userName}: ${userText}`;
+
+                    const parts = [{ text: fullSystemPrompt }];
+
+                    if (imageBase64) {
+                        const split = imageBase64.split(';');
+                        const mime = split[0].split(':')[1];
+                        const data = split[1].split(',')[1];
+                        parts.push({
+                            inlineData: { mimeType: mime, data: data }
+                        });
+                    }
+
+                    const payload = { contents: [{ role: 'user', parts: parts }] };
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await response.json();
+
+                    if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+                        replyText = data.candidates[0].content.parts[0].text;
+                    }
+                }
+            } catch (e) {
+                console.error("Gemini API Request error:", e);
+                replyText = "การเชื่อมต่อขัดข้อง โปรดตรวจสอบว่า API Key ของคุณถูกต้องและมีสิทธิ์การใช้งาน (หรือเปลี่ยนกลับแป้นพิมพ์ภาษาอังกฤษแล้ววางคีย์ในหน้าตั้งค่ากลุ่มอีกครั้ง)";
+            }
+
+            removeGeneratingWave();
+            saveToDB(replyText, generatedImg);
+        }
+
+        async function saveToDB(text, image) {
+            const aiMessageObj = {
+                roomId: state.currentRoomId,
+                senderId: 'gemini',
+                senderName: 'Gemini',
+                text: text,
+                imageUrl: image,
+                timestamp: Date.now()
+            };
+
+            if (state.isOnline) {
+                const path = `/artifacts/${appId}/public/data/messages`;
+                await addDoc(collection(state.db, path), aiMessageObj);
+            } else {
+                state.messagesCache.push(aiMessageObj);
+                renderMessages();
+            }
+        }
+
+        // Image attachment handler
+        window.handleImageSelection = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                state.attachedImageBase64 = e.target.result;
+                ui.previewImg.src = state.attachedImageBase64;
+                ui.previewBox.classList.remove('hidden');
+
+                ui.actionIcon.textContent = 'send';
+                ui.actionIcon.classList.add('text-geminiBlue');
+                ui.actionIcon.classList.remove('text-geminiSecondaryText');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.clearAttachment = () => {
+            state.attachedImageBase64 = null;
+            ui.previewBox.classList.add('hidden');
+            document.getElementById('imageUploadInput').value = '';
+            handleInputState(ui.chatInput);
+        };
+
+        ui.chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendClick();
+            }
+        });
+
+        startDatabase();
+
+    </script>
+</body>
+
+</html>
