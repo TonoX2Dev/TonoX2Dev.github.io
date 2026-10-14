@@ -8,9 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>tonofastcode — receive</title>
     <meta name="theme-color" content="#050a07" />
+    <script src="../assets/theme-boot.js"></script>
     <link rel="canonical" href="https://tonofastcode.vercel.app/receive/">
 
     <script type="module" crossorigin src="../assets/receive-CLE1NPaP.js"></script>
+    <script type="module" src="../assets/receiver-share.js"></script>
+    <script type="module" src="../assets/theme-switcher.js"></script>
+    <script type="module" src="../assets/share-target.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/dialog-BCNB4hJ8.js">
     <link rel="modulepreload" crossorigin href="../assets/wake-lock-BlIwRfLh.js">
     <link rel="stylesheet" crossorigin href="../assets/dialog-lwSt6g5n.css">
@@ -87,6 +91,19 @@
             <div class="metric"><div class="k">transfer</div><div class="v" id="m-payload">—</div></div>
           </div>
         </details>
+        <dialog class="help-dialog share-dialog" id="share-dialog" aria-labelledby="share-title" data-share-title="tonofastcode — receiver">
+          <h2 id="share-title" tabindex="-1" autofocus>Share the receiver</h2>
+          <p class="share-hint">Scan this QR code to open Receiver Mode directly, or share the link.</p>
+          <canvas id="share-qr" width="16" height="16"></canvas>
+          <div class="share-url-row">
+            <input id="share-url" readonly value="https://tonofastcode.vercel.app/receive/" aria-label="Receiver link" />
+            <button id="share-copy" class="secondary-button" type="button">Copy</button>
+          </div>
+          <div class="note-actions">
+            <button id="share-native" class="secondary-button" type="button" hidden>Share…</button>
+            <button id="share-close" class="secondary-button" type="button">Close</button>
+          </div>
+        </dialog>
         <details class="settings" id="settings">
           <summary>Receive settings</summary>
           <div class="row">
@@ -109,6 +126,7 @@
             <input type="checkbox" id="cfg-autoshow" checked />
             <span>Show received files automatically</span>
           </label>
+          <button id="share-open" class="secondary-button share-site" type="button">Share receiver QR and link</button>
           <p class="hint settings-actual" id="camera-actual">Applied when the camera starts.</p>
         </details>
       </section>

@@ -7,12 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>tonofastcode — ส่ง</title>
     <meta name="theme-color" content="#050a07" />
+    <script src="../../assets/theme-boot.js"></script>
     <link rel="canonical" href="https://tonofastcode.vercel.app/th/send/">
     
     
     
     <script type="module" crossorigin src="../../assets/send-Bd5Iw8X4.js"></script>
     <script type="module" src="../../assets/slider-refinements.js"></script>
+    <script type="module" src="../../assets/file-staging.js"></script>
+    <script type="module" src="../../assets/theme-switcher.js"></script>
+    <script type="module" src="../../assets/share-target.js"></script>
     <link rel="modulepreload" crossorigin href="../../assets/dialog-BCNB4hJ8.js">
     <link rel="modulepreload" crossorigin href="../../assets/share-dialog-B4uABdxi.js">
     <link rel="modulepreload" crossorigin href="../../assets/wake-lock-BlIwRfLh.js">
@@ -52,10 +56,15 @@
       <label class="file-picker" id="pane-file">
         <span class="file-picker-button" id="file-picker-button">เลือกไฟล์</span>
         <span class="file-picker-text" id="file-picker-label">ไฟล์ขนาดไม่เกิน 64 MB</span>
-        <input id="cfg-file" type="file" />
+        <input id="cfg-file" type="file" multiple />
       </label>
 
       <div id="pane-demo" hidden></div>
+      <section class="staged-files" id="staged-files" hidden aria-label="ไฟล์ที่เตรียมส่ง">
+        <ul class="staged-file-list" id="staged-file-list"></ul>
+        <p class="staged-file-status" id="staged-file-status" role="status" aria-live="polite"></p>
+        <button class="transfer-now" id="transfer-now" type="button" disabled>เริ่มส่ง</button>
+      </section>
 
       <div class="note-composer" id="pane-snippet" hidden>
         <label for="snippet-text" id="snippet-label">ข้อความที่จะส่ง</label>
@@ -102,6 +111,7 @@
           <div><dt>การบีบอัด</dt><dd id="spec-compression">—</dd></div>
           <div><dt>บล็อกข้อมูล</dt><dd id="spec-k">—</dd></div>
         </dl>
+        <div class="settings-share-link" id="settings-share-link"></div>
         
         <details class="settings subsection" id="export-panel" hidden>
           <summary>ส่งออกภาพเคลื่อนไหว</summary>
