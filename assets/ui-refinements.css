@@ -1,0 +1,208 @@
+/* tonox2dev dont copyright */
+:root {
+  --bg: #050a07;
+  --panel: #0a160d;
+  --panel-strong: #102117;
+  --line: #23472b;
+  --line-bright: #43854b;
+  --text: #dcffe3;
+  --text-dim: #b8e8bf;
+  --muted: #88ad8d;
+  --muted-dim: #64806a;
+  --accent: #39ff14;
+  --accent-hi: #8bff69;
+  --accent-ink: #031006;
+  --green: #72ff91;
+  --red: #ff7b72;
+  --accent-rgb: 57, 255, 20;
+  --bg-rgb: 5, 10, 7;
+}
+
+.home-page,
+.tool-page,
+.receiver-page {
+  background:
+    radial-gradient(ellipse at 8% 24%, rgb(28 120 52 / 10%), transparent 32%),
+    radial-gradient(ellipse at 91% 9%, rgb(57 255 20 / 9%), transparent 30%),
+    radial-gradient(ellipse at 72% 84%, rgb(0 160 90 / 8%), transparent 34%),
+    var(--bg);
+}
+
+.transfer-card,
+.metric,
+.file-picker,
+details.settings {
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.transfer-card:hover,
+.transfer-card:focus-within,
+.file-picker:hover,
+.metric:hover,
+details.settings:hover {
+  border-color: var(--accent-hi);
+  box-shadow:
+    0 0 0 1px rgb(139 255 105 / 18%),
+    0 0 26px rgb(57 255 20 / 13%);
+}
+
+.transfer-card:hover {
+  transform: translateY(-2px);
+}
+
+button,
+button:hover,
+.file-picker-button,
+.action,
+.action:hover,
+a.download,
+a.download:hover {
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease,
+    filter 150ms ease,
+    transform 150ms ease;
+}
+
+button:hover,
+.file-picker:hover .file-picker-button,
+.action:hover,
+a.download:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgb(139 255 105 / 28%);
+}
+
+button:hover,
+.action:hover,
+a.download:hover {
+  transform: translateY(-1px);
+}
+
+.text-button:hover,
+.text-button:focus-visible {
+  color: var(--accent-hi);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  text-shadow: 0 0 8px rgb(139 255 105 / 35%);
+  filter: none;
+}
+
+.no-signal-toast {
+  position: static;
+  z-index: auto;
+  width: fit-content;
+  max-width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 0 8px;
+  transform: none;
+  white-space: normal;
+}
+
+main > .locale-banner {
+  display: none;
+}
+
+details.settings .range-setting {
+  flex: 1 1 220px;
+  min-width: min(100%, 220px);
+}
+
+details.settings .range-setting > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+details.settings .range-setting output {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+details.settings .range-setting input[type="range"] {
+  width: 100%;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+a:not(.action):not(.download):hover,
+a:not(.action):not(.download):focus-visible {
+  color: var(--accent-hi);
+  text-shadow: 0 0 12px rgb(139 255 105 / 55%);
+}
+
+.brand-logo,
+.action-arrow,
+.site-footer svg {
+  transition:
+    filter 150ms ease,
+    transform 150ms ease;
+}
+
+.brand:hover .brand-logo,
+a:hover .action-arrow,
+button:hover svg,
+a:hover svg {
+  filter: drop-shadow(0 0 6px rgb(139 255 105 / 85%));
+}
+
+.brand:hover .brand-logo {
+  transform: scale(1.08);
+}
+
+.mode-nav a:hover,
+.mode-nav a:focus-visible,
+.footer-lang .lang-select:hover,
+.footer-lang .lang-select:focus-visible {
+  color: var(--accent-hi);
+  border-color: var(--line-bright);
+  box-shadow: 0 0 14px rgb(57 255 20 / 20%);
+  text-shadow: 0 0 10px rgb(139 255 105 / 45%);
+}
+
+select:hover,
+input:not([type="file"]):hover,
+textarea:hover,
+summary:hover {
+  border-color: var(--accent-hi);
+  box-shadow: 0 0 14px rgb(57 255 20 / 20%);
+}
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline-color: var(--accent-hi);
+  box-shadow: 0 0 0 3px rgb(139 255 105 / 28%);
+}
+
+html[lang="th"] body,
+html[lang="th"] body * {
+  font-family: "Noto Sans Thai", "Leelawadee UI", Tahoma, ui-monospace, monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

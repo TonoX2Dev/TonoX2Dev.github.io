@@ -1,0 +1,188 @@
+<!doctype html>
+<!-- tonox2dev dont copyright -->
+<!-- tonofastcode v0.5.3 - by tonox2dev — SPDX-License-Identifier: AGPL-3.0-or-later — portions MIT: (c) 2026 Steve Dakh; Emscripten (see NOTICE) — -->
+<html lang="th" data-i18n-static="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>tonofastcode — ส่ง</title>
+    <meta name="theme-color" content="#050a07" />
+    <link rel="canonical" href="https://tonofastcode.vercel.app/th/send/">
+    
+    
+    
+    <script type="module" crossorigin src="../../assets/send-Bd5Iw8X4.js"></script>
+    <script type="module" src="../../assets/slider-refinements.js"></script>
+    <link rel="modulepreload" crossorigin href="../../assets/dialog-BCNB4hJ8.js">
+    <link rel="modulepreload" crossorigin href="../../assets/share-dialog-B4uABdxi.js">
+    <link rel="modulepreload" crossorigin href="../../assets/wake-lock-BlIwRfLh.js">
+    <link rel="stylesheet" crossorigin href="../../assets/dialog-lwSt6g5n.css">
+    <link rel="stylesheet" href="../../assets/ui-refinements.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="../../icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="../../icon.png" />
+    <link rel="alternate" hreflang="en" href="https://tonofastcode.vercel.app/send/" />
+    <link rel="alternate" hreflang="th" href="https://tonofastcode.vercel.app/th/send/">
+  </head>
+  <body class="tool-page">
+    <header class="site-header">
+      <a class="brand" href="../"><img class="brand-logo" src="../../icon.png" alt="" aria-hidden="true">tonofastcode</a>
+      
+      <nav class="mode-nav" aria-label="เมนูโหมด"><a href="../send/">ส่ง</a><a href="../receive/">รับไฟล์</a></nav>
+    </header>
+    <main class="send-shell">
+      <section class="tool-intro">
+        <p class="eyebrow">หน้าจอ → กล้อง</p>
+        <h1 id="tool-title">ส่งไฟล์</h1>
+        <p>ข้อมูลจะไม่ออกจากอุปกรณ์นี้จนกว่าจะมีเครื่องรับสแกน</p>
+      </section>
+
+      <div class="mode-picker" id="mode-picker" role="radiogroup" aria-label="ประเภทข้อมูลที่จะส่ง">
+        <label>
+          <input type="radio" name="send-mode" value="file" checked />
+          <span>ไฟล์</span>
+        </label>
+        <label>
+          <input type="radio" name="send-mode" value="snippet" />
+          <span>ข้อความ</span>
+        </label>
+      </div>
+
+      
+      <label class="file-picker" id="pane-file">
+        <span class="file-picker-button" id="file-picker-button">เลือกไฟล์</span>
+        <span class="file-picker-text" id="file-picker-label">ไฟล์ขนาดไม่เกิน 64 MB</span>
+        <input id="cfg-file" type="file" />
+      </label>
+
+      <div id="pane-demo" hidden></div>
+
+      <div class="note-composer" id="pane-snippet" hidden>
+        <label for="snippet-text" id="snippet-label">ข้อความที่จะส่ง</label>
+        <textarea id="snippet-text" rows="7" placeholder="วางหรือพิมพ์ข้อความ เช่น URL การตั้งค่า หรือข้อความทั่วไป…"></textarea>
+        <button id="send-snippet" type="button">เริ่มส่งข้อความ</button>
+      </div>
+
+      <div class="stage" id="stage" hidden><canvas id="qr" width="16" height="16"></canvas></div>
+      <details class="settings">
+        <summary>ตั้งค่าการส่ง</summary>
+        <div class="row">
+          <label>
+            <span>เฟรมต่อวินาที</span>
+            
+            <select id="cfg-fps"><option>10</option><option>15</option><option>20</option><option>24</option><option>30</option><option>55</option><option selected>60</option></select>
+          </label>
+          <label>
+            <span>ไบต์ต่อเฟรม</span>
+            <select id="cfg-bytes"><option>500</option><option>1000</option><option>1465</option><option>1850</option><option>2331</option><option selected>2953</option></select>
+          </label>
+          <label>
+            <span>แก้ไขข้อผิดพลาด</span>
+            <select id="cfg-ecc">
+              <option selected>L</option><option>M</option><option>Q</option><option>H</option>
+            </select>
+          </label>
+          <label>
+            <span>รูปแบบ</span>
+            <select id="cfg-grid">
+              <option value="1" selected>1 คิวอาร์โค้ด</option><option value="2">2 คิวอาร์โค้ด (1×2)</option><option value="4">4 คิวอาร์โค้ด (2×2)</option><option value="6">6 คิวอาร์โค้ด (2×3)</option>
+            </select>
+          </label>
+          <label class="range-setting">
+            <span>ขนาดแสดงผล <output id="cfg-size-value" for="cfg-size">900 px</output></span>
+            <input id="cfg-size" type="range" min="100" max="1200" step="1" value="900" />
+          </label>
+        </div>
+        
+        <dl class="stream-specs" id="stream-specs" hidden>
+          <div><dt>อัตราการส่ง</dt><dd id="spec-fps">—</dd></div>
+          <div><dt>ข้อมูลต่อเฟรม</dt><dd id="spec-frame">—</dd></div>
+          <div><dt>คิวอาร์โค้ด</dt><dd id="spec-qr">—</dd></div>
+          <div><dt>กำลังส่ง</dt><dd id="spec-payload">—</dd></div>
+          <div><dt>การบีบอัด</dt><dd id="spec-compression">—</dd></div>
+          <div><dt>บล็อกข้อมูล</dt><dd id="spec-k">—</dd></div>
+        </dl>
+        
+        <details class="settings subsection" id="export-panel" hidden>
+          <summary>ส่งออกภาพเคลื่อนไหว</summary>
+          <p class="hint">บันทึกสตรีมนี้เป็นไฟล์ภาพเคลื่อนไหววนซ้ำ นำไปใส่ในวิดีโอหรือหน้าเว็บ แล้วใช้อีกกล้องสแกนภาพที่กำลังเล่นเพื่อรับไฟล์ได้</p>
+          <div class="row">
+            <label>
+              <span>รูปแบบไฟล์</span>
+              <select id="cfg-export-format">
+                <option value="apng" selected>APNG</option><option value="zip">ชุดภาพ PNG (ZIP)</option>
+              </select>
+            </label>
+            <label>
+              <span>อัตราเฟรม</span>
+              <select id="cfg-export-fps">
+                <option>5</option><option selected>10</option><option>15</option><option>30</option><option>60</option>
+              </select>
+            </label>
+            <label>
+              <span>ขนาดโมดูล</span>
+              <select id="cfg-export-scale">
+                <option value="1">1×</option><option value="2">2×</option><option value="4" selected>4×</option><option value="8">8×</option>
+              </select>
+            </label>
+            <label>
+              <span>จำนวนรอบ</span>
+              <select id="cfg-export-cycles">
+                <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option>
+              </select>
+            </label>
+          </div>
+          <p class="hint" id="export-estimate">—</p>
+          <div class="note-actions">
+            <button id="export-start" type="button">ส่งออก</button>
+          </div>
+        </details>
+      </details>
+      <div class="hint status-line" id="specs">เลือกไฟล์เพื่อเริ่มส่ง</div>
+      <dialog class="help-dialog share-dialog" id="share-dialog" aria-labelledby="share-title" data-share-title="tonofastcode — หน้ารับข้อมูล">
+        
+        <h2 id="share-title" tabindex="-1" autofocus>แชร์หน้ารับข้อมูล</h2>
+        <p class="share-hint">สแกนด้วยกล้องของอุปกรณ์อีกเครื่อง หรือส่งลิงก์ให้กัน</p>
+        <canvas id="share-qr" width="16" height="16"></canvas>
+        <div class="share-url-row">
+          
+          <input id="share-url" readonly value="https://tonofastcode.vercel.app/receive/" aria-label="ลิงก์หน้ารับข้อมูล" />
+          <button id="share-copy" class="secondary-button" type="button">คัดลอก</button>
+        </div>
+        <div class="note-actions">
+          <button id="share-native" class="secondary-button" type="button" hidden>แชร์…</button>
+          <button id="share-close" class="secondary-button" type="button">ปิด</button>
+        </div>
+      </dialog>
+      <div class="hint footer-hint" id="footer-hint" hidden>เปิดหน้า “รับ” บนอุปกรณ์อีกเครื่อง แล้วเพิ่มความสว่างหน้าจอนี้</div>
+    </main>
+    <footer class="site-footer">
+      <span class="footer-id">
+        <span>tonofastcode</span>
+        <span>v0.5.3 - by tonox2dev</span>
+      </span>
+      </footer>
+  <script>if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+
+    const wasControlled = !!navigator.serviceWorker.controller;
+    let reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!wasControlled || reloading) return;
+      reloading = true;
+      location.reload();
+    });
+    navigator.serviceWorker.register("../../sw.js", { scope: "../../" }).then((reg) => {
+      const promote = (worker) => worker && worker.postMessage({ type: "SKIP_WAITING" });
+      promote(reg.waiting);
+      reg.addEventListener("updatefound", () => {
+        const next = reg.installing;
+        if (!next) return;
+        next.addEventListener("statechange", () => {
+          if (next.state === "installed") promote(reg.waiting || next);
+        });
+      });
+    });
+  });
+}</script></body>
+</html>

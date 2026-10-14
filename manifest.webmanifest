@@ -1,0 +1,21 @@
+{
+  "name": "tonofastcode — Optical file transfer",
+  "short_name": "tonofastcode",
+  "description": "Transfer files or text between devices using a screen and camera, without a network connection.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050a07",
+  "theme_color": "#050a07",
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "1254x1254",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "author": "by tonox2dev"
+}

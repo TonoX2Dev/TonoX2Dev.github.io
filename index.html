@@ -1,0 +1,144 @@
+<!doctype html>
+<!-- tonox2dev dont copyright -->
+
+<html lang="en" data-i18n-static="en">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>tonofastcode — transfer files with light</title>
+    <meta
+      name="description"
+     
+      content="Send a file or text between two devices with nothing but a screen and a camera. Fountain-coded animated QR codes, no network path in between."
+    />
+    <meta name="theme-color" content="#050a07" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="tonofastcode" />
+    <meta property="og:title" content="tonofastcode — transfer files with light" />
+    <meta
+      property="og:description"
+     
+      content="Fountain-coded animated QR codes, screen to camera. No account, no pairing, no network path between the two devices. Up to 418 KB/s sustained, benchmarked with receipts."
+    />
+    <meta property="og:url" content="https://tonofastcode.vercel.app/" />
+    <meta property="og:image" content="https://tonofastcode.vercel.app/icon.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+     
+      content="A phone mid-transfer, reading an animated QR code stream off another screen."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="canonical" href="https://tonofastcode.vercel.app/">
+
+    <script type="module" crossorigin src="./assets/index-QVrFRxVl.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/dialog-BCNB4hJ8.js">
+    <link rel="modulepreload" crossorigin href="./assets/share-dialog-B4uABdxi.js">
+    <link rel="stylesheet" crossorigin href="./assets/dialog-lwSt6g5n.css">
+    <link rel="stylesheet" href="./assets/ui-refinements.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="./icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="./icon.png" />
+    <link rel="alternate" hreflang="en" href="https://tonofastcode.vercel.app/" />
+    <link rel="alternate" hreflang="th" href="https://tonofastcode.vercel.app/th/" />
+  </head>
+  <body class="home-page">
+    <header class="site-header">
+      <a class="brand" href="./"><img class="brand-logo" src="./icon.png" alt="" aria-hidden="true">tonofastcode</a>
+      
+      <nav class="mode-nav" aria-label="Mode"><a href="./send/">Send</a><a href="./receive/">Receive</a></nav>
+    </header>
+    <main class="home-shell">
+      <section class="hero">
+        <h1>Transfer files<br />with light.</h1>
+        <p class="hero-copy">
+          Send a file or a block of text from one screen to another device's camera.
+          No account, pairing, cloud storage, or network path between devices.
+        </p>
+      </section>
+
+      <section class="transfer-grid" aria-label="Choose a side">
+        <article class="transfer-card file-card">
+          <div>
+            <p class="card-kicker">This screen transmits</p>
+            <h2>Send a file or text</h2>
+            <p>Any file up to 64 MB, or a pasted text snippet up to 4 MB. Compressed when it helps, restored with its original name.</p>
+          </div>
+          <div class="card-actions">
+            <a class="action" href="./send/"><span>Send</span> <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"/><path d="M12 5l7 7-7 7"/></svg></a>
+          </div>
+        </article>
+
+        <article class="transfer-card note-feature-card">
+          <div>
+            <p class="card-kicker">This camera receives</p>
+            <h2>Point and receive</h2>
+            <p>Point your camera at the sender's screen to receive the file.</p>
+          </div>
+          <div class="card-actions">
+            <a class="action" href="./receive/"><span>Receive</span> <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v15"/><path d="M5 12l7 7 7-7"/></svg></a>
+          </div>
+        </article>
+      </section>
+
+      <div class="home-share">
+        <button id="share-open" class="secondary-button share-site" type="button">
+          <svg class="share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>
+          <span>Share tonofastcode</span>
+        </button>
+      </div>
+
+      <dialog class="help-dialog share-dialog" id="share-dialog" aria-labelledby="share-title" data-share-title="tonofastcode — transfer files with light">
+        
+        <h2 id="share-title" tabindex="-1" autofocus>Share this app</h2>
+        <p class="share-hint">Scan this with another device's camera, or send it the link.</p>
+        <canvas id="share-qr" width="16" height="16"></canvas>
+        <div class="share-url-row">
+          <input id="share-url" readonly value="https://tonofastcode.vercel.app/" aria-label="Site link" />
+          <button id="share-copy" class="secondary-button" type="button">Copy</button>
+        </div>
+        <div class="note-actions">
+          <button id="share-native" class="secondary-button" type="button" hidden>Share…</button>
+          <button id="share-close" class="secondary-button" type="button">Close</button>
+        </div>
+      </dialog>
+
+      <p class="privacy-note">
+        A network path is not required between the devices. The bytes travel as light.
+        Files are not encrypted, so anything on the sending screen is readable by any
+        camera pointed at it.
+      </p>
+    </main>
+    <footer class="site-footer">
+      <span class="footer-id">
+        <span>tonofastcode</span>
+        <span>v0.5.3 - by tonox2dev</span>
+      </span>
+      </footer>
+  <script>if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    const wasControlled = !!navigator.serviceWorker.controller;
+    let reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!wasControlled || reloading) return;
+      reloading = true;
+      location.reload();
+    });
+    navigator.serviceWorker.register("./sw.js", { scope: "./" }).then((reg) => {
+      const promote = (worker) => worker && worker.postMessage({ type: "SKIP_WAITING" });
+      promote(reg.waiting);
+      reg.addEventListener("updatefound", () => {
+        const next = reg.installing;
+        if (!next) return;
+        next.addEventListener("statechange", () => {
+          if (next.state === "installed") promote(reg.waiting || next);
+        });
+      });
+    });
+  });
+}</script></body>
+</html>

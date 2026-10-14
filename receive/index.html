@@ -1,0 +1,144 @@
+<!doctype html>
+<!-- tonox2dev dont copyright -->
+
+<html lang="en" data-i18n-static="en">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>tonofastcode — receive</title>
+    <meta name="theme-color" content="#050a07" />
+    <link rel="canonical" href="https://tonofastcode.vercel.app/receive/">
+
+    <script type="module" crossorigin src="../assets/receive-CLE1NPaP.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/dialog-BCNB4hJ8.js">
+    <link rel="modulepreload" crossorigin href="../assets/wake-lock-BlIwRfLh.js">
+    <link rel="stylesheet" crossorigin href="../assets/dialog-lwSt6g5n.css">
+    <link rel="stylesheet" href="../assets/ui-refinements.css">
+  <link rel="manifest" href="/manifest.webmanifest">        <link rel="icon" href="../icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="../icon.png" />
+    <link rel="alternate" hreflang="en" href="https://tonofastcode.vercel.app/receive/" />
+    <link rel="alternate" hreflang="th" href="https://tonofastcode.vercel.app/th/receive/" />
+  </head>
+  <body class="receiver-page">
+    <header class="site-header">
+      <a class="brand" href="../"><img class="brand-logo" src="../icon.png" alt="" aria-hidden="true">tonofastcode</a>
+      
+      <nav class="mode-nav" aria-label="Mode"><a href="../send/">Send</a><a href="../receive/">Receive</a></nav>
+    </header>
+    <main class="receiver-shell">
+      <section class="receiver-primary">
+        <div class="receiver-heading">
+          <div>
+            <p class="eyebrow">Camera → your device</p>
+            <h1>Receive</h1>
+          </div>
+          <div class="hint status-line" id="stats">Ready to scan a file or text stream</div>
+        </div>
+        <button id="start">Start camera</button>
+        
+        <div class="preview-zone" id="preview" style="display: none">
+          
+          <div class="no-signal-toast" id="no-signal" role="status" hidden>
+            <span>Nothing happening?</span>
+            <button id="no-signal-help" class="text-button" type="button">Help</button>
+            <button id="no-signal-dismiss" class="text-button no-signal-dismiss" type="button">Dismiss</button>
+          </div>
+          <div class="preview">
+            <video id="video" muted playsinline></video>
+            <canvas id="detect-overlay" class="detect-overlay" aria-hidden="true"></canvas>
+            <div class="transfer-hud">
+              <div class="progress-status" id="progress-status" style="display: none" aria-live="polite">
+                <strong id="progress-label">0% · 0 frames</strong>
+                <span id="eta-label">Estimating time…</span>
+              </div>
+              <div
+                class="progress"
+                id="progress"
+                style="display: none"
+                role="progressbar"
+                aria-label="Transfer recovery progress"
+               
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              ><div id="bar"></div></div>
+            </div>
+          </div>
+        </div>
+        <div id="result"></div>
+        <dialog class="help-dialog" id="no-signal-dialog" aria-labelledby="no-signal-title">
+          
+          <h2 id="no-signal-title" tabindex="-1" autofocus>Troubleshooting tips</h2>
+          
+          <ul id="no-signal-tips"></ul>
+          <button id="no-signal-close" class="secondary-button" type="button">Got it</button>
+        </dialog>
+        <details class="settings diagnostics" id="diagnostics" style="display: none">
+          <summary>Live diagnostics</summary>
+          <div class="metrics" id="metrics" style="display: none">
+            <div class="metric"><div class="k">capture fps</div><div class="v" id="m-cap">—</div></div>
+            <div class="metric"><div class="k">decode fps</div><div class="v amber" id="m-dec">—</div></div>
+            <div class="metric"><div class="k">goodput</div><div class="v amber" id="m-rate">—</div></div>
+            <div class="metric"><div class="k">elapsed</div><div class="v" id="m-time">—</div></div>
+            <div class="metric"><div class="k">frames new/dup</div><div class="v" id="m-frames">—</div></div>
+            <div class="metric"><div class="k">blocks K</div><div class="v" id="m-k">—</div></div>
+            <div class="metric"><div class="k">block len</div><div class="v" id="m-block">—</div></div>
+            <div class="metric"><div class="k">transfer</div><div class="v" id="m-payload">—</div></div>
+          </div>
+        </details>
+        <details class="settings" id="settings">
+          <summary>Receive settings</summary>
+          <div class="row">
+            <label class="camera-pick"><span>camera</span>
+              
+              <select id="cfg-camera"><option value="" selected>auto</option></select>
+            </label>
+            <label><span>capture width</span>
+              <select id="cfg-width"><option>960</option><option selected>1280</option><option>1920</option><option>2560</option><option>3840</option></select>
+            </label>
+            <label><span>capture fps</span>
+              <select id="cfg-capfps"><option>30</option><option selected>60</option></select>
+            </label>
+            <label><span>decode workers</span>
+              
+              <select id="cfg-workers"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
+            </label>
+          </div>
+          <label class="check">
+            <input type="checkbox" id="cfg-autoshow" checked />
+            <span>Show received files automatically</span>
+          </label>
+          <p class="hint settings-actual" id="camera-actual">Applied when the camera starts.</p>
+        </details>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <span class="footer-id">
+        <span>tonofastcode</span>
+        <span>v0.5.3 - by tonox2dev</span>
+      </span>
+      </footer>
+  <script>if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    const wasControlled = !!navigator.serviceWorker.controller;
+    let reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!wasControlled || reloading) return;
+      reloading = true;
+      location.reload();
+    });
+    navigator.serviceWorker.register("../sw.js", { scope: "../" }).then((reg) => {
+      const promote = (worker) => worker && worker.postMessage({ type: "SKIP_WAITING" });
+      promote(reg.waiting);
+      reg.addEventListener("updatefound", () => {
+        const next = reg.installing;
+        if (!next) return;
+        next.addEventListener("statechange", () => {
+          if (next.state === "installed") promote(reg.waiting || next);
+        });
+      });
+    });
+  });
+}</script></body>
+</html>
