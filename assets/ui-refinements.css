@@ -581,6 +581,56 @@ a:not(.action):not(.download):focus-visible {
   border: 0;
 }
 
+.document-preview-word-content {
+  max-height: min(72vh, 760px);
+  overflow: auto;
+  padding: 24px;
+  color: #222;
+  background: #fff;
+  border: 1px solid #c7cbd1;
+  border-radius: 8px;
+  font: 16px/1.6 Arial, Helvetica, sans-serif;
+  overflow-wrap: anywhere;
+}
+
+.document-preview-word-content table,
+.document-preview-sheet table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.document-preview-word-content th,
+.document-preview-word-content td,
+.document-preview-sheet th,
+.document-preview-sheet td {
+  padding: 7px 10px;
+  border: 1px solid #9aa0a6;
+  text-align: start;
+  vertical-align: top;
+}
+
+.document-preview-sheet {
+  max-height: 500px;
+  overflow: auto;
+  padding: 12px;
+  color: #fff;
+  background: #222;
+  border-radius: 8px;
+}
+
+.document-preview-text {
+  max-height: 400px;
+  overflow: auto;
+  margin: 0;
+  padding: 16px;
+  color: #38ef7d;
+  background: #1e1e1e;
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .document-preview .document-preview-word-frame {
   height: min(72vh, 760px);
   min-height: 500px;
@@ -704,7 +754,7 @@ a:not(.action):not(.download):focus-visible {
 
 .minecraft-pack-card {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr) auto;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
   align-items: center;
   gap: 18px;
   padding: 16px;
@@ -718,15 +768,15 @@ a:not(.action):not(.download):focus-visible {
 .minecraft-pack-icon,
 .minecraft-pack-icon-fallback {
   display: grid;
-  width: 88px;
-  height: 88px;
+  width: 72px;
+  height: 72px;
   place-items: center;
   border: 1px solid var(--line);
   border-radius: 12px;
 }
 
 .minecraft-pack-icon {
-  object-fit: contain;
+  object-fit: cover;
   image-rendering: auto;
 }
 
@@ -746,9 +796,11 @@ a:not(.action):not(.download):focus-visible {
 
 .minecraft-pack-name {
   margin: 0 0 5px;
-  overflow-wrap: anywhere;
+  overflow: hidden;
   color: var(--text);
   font-size: 1.1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .minecraft-pack-description,
@@ -757,6 +809,13 @@ a:not(.action):not(.download):focus-visible {
   overflow-wrap: anywhere;
   color: var(--text-dim);
   font-size: 0.92rem;
+}
+
+.minecraft-pack-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .minecraft-pack-author {
