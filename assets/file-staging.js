@@ -53,6 +53,9 @@ const iconByExtension = new Map([
   ...["txt", "log", "md"].map((extension) => [extension, "text.ico"]),
   ...["doc", "docx"].map((extension) => [extension, "docs.ico"]),
   ...["xls", "xlsx", "csv"].map((extension) => [extension, "xlsx.ico"]),
+  ...["mcaddon", "mcpack", "mcworld"].map((extension) => [extension, "mc.ico"]),
+  ["py", "python.ico"],
+  ...["ppt", "pptx"].map((extension) => [extension, "pptx.ico"]),
   ["pdf", "pdf.ico"],
 ]);
 

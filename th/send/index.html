@@ -17,6 +17,7 @@
     <script type="module" src="../../assets/file-staging.js"></script>
     <script type="module" src="../../assets/theme-switcher.js"></script>
     <script type="module" src="../../assets/share-target.js"></script>
+    <script type="module" src="../../assets/sender-enhancements.js"></script>
     <link rel="modulepreload" crossorigin href="../../assets/dialog-BCNB4hJ8.js">
     <link rel="modulepreload" crossorigin href="../../assets/share-dialog-B4uABdxi.js">
     <link rel="modulepreload" crossorigin href="../../assets/wake-lock-BlIwRfLh.js">
@@ -69,6 +70,17 @@
       <div class="note-composer" id="pane-snippet" hidden>
         <label for="snippet-text" id="snippet-label">ข้อความที่จะส่ง</label>
         <textarea id="snippet-text" rows="7" placeholder="วางหรือพิมพ์ข้อความ เช่น URL การตั้งค่า หรือข้อความทั่วไป…"></textarea>
+        <label class="snippet-display-setting" for="snippet-display-mode">
+          <span>รูปแบบการแสดงผลฝั่งผู้รับ</span>
+          <select id="snippet-display-mode">
+            <option value="none">ไม่ใช้</option>
+            <option value="letter">จดหมาย</option>
+            <option value="greeting">การ์ดอวยพร</option>
+            <option value="birthday">กล่องของขวัญวันเกิด</option>
+            <option value="christmas">กล่องของขวัญวันคริสต์มาส</option>
+            <option value="scroll">ประกาศผล</option>
+          </select>
+        </label>
         <button id="send-snippet" type="button">เริ่มส่งข้อความ</button>
       </div>
 

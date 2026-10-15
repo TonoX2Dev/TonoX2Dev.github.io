@@ -15,6 +15,7 @@
     <script type="module" src="../assets/file-staging.js"></script>
     <script type="module" src="../assets/theme-switcher.js"></script>
     <script type="module" src="../assets/share-target.js"></script>
+    <script type="module" src="../assets/sender-enhancements.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/dialog-BCNB4hJ8.js">
     <link rel="modulepreload" crossorigin href="../assets/share-dialog-B4uABdxi.js">
     <link rel="modulepreload" crossorigin href="../assets/wake-lock-BlIwRfLh.js">
@@ -65,6 +66,17 @@
       <div class="note-composer" id="pane-snippet" hidden>
         <label for="snippet-text" id="snippet-label">Text to send</label>
         <textarea id="snippet-text" rows="7" placeholder="Paste or type anything — a URL, a config, a wall of text…"></textarea>
+        <label class="snippet-display-setting" for="snippet-display-mode">
+          <span>Receiver presentation</span>
+          <select id="snippet-display-mode">
+            <option value="none">None</option>
+            <option value="letter">Letter (จดหมาย)</option>
+            <option value="greeting">Greeting Card (การ์ดอวยพร)</option>
+            <option value="birthday">Birthday Gift Box (กล่องของขวัญวันเกิด)</option>
+            <option value="christmas">Christmas Gift Box (กล่องของขวัญวันคริสต์มาส)</option>
+            <option value="scroll">Rolled Announcement (ประกาศผล)</option>
+          </select>
+        </label>
         <button id="send-snippet" type="button">Start text stream</button>
       </div>
 
