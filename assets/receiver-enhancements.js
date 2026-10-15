@@ -11,6 +11,7 @@ const labels =
         scroll: "ประกาศผล",
         open: "เปิด",
         doubleClick: "ดับเบิลคลิกที่ฝากล่องเพื่อเปิด",
+        close: "ปิด",
         copy: "คัดลอก",
         copied: "คัดลอกแล้ว",
         copyFailed: "คัดลอกไม่สำเร็จ",
@@ -27,6 +28,7 @@ const labels =
         scroll: "An announcement",
         open: "Open",
         doubleClick: "Double-click the lid to open",
+        close: "Close",
         copy: "Copy",
         copied: "Copied",
         copyFailed: "Copy failed",
@@ -47,6 +49,9 @@ const presentations = {
 let confettiModule;
 let envelopeTemplatePromise;
 let pdfJsModulePromise;
+let presentationDialog;
+let presentationDialogTitle;
+let presentationDialogMessage;
 
 function celebrate() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -71,6 +76,46 @@ function celebrate() {
       );
     })
     .catch((error) => console.error("Could not play the celebration effect.", error));
+}
+
+function showPresentationMessage(title, message) {
+  if (!presentationDialog) {
+    presentationDialog = document.createElement("dialog");
+    presentationDialog.className = "help-dialog enhancement-dialog";
+    presentationDialog.setAttribute(
+      "aria-labelledby",
+      "presentation-dialog-title",
+    );
+    presentationDialogTitle = document.createElement("h2");
+    presentationDialogTitle.id = "presentation-dialog-title";
+    presentationDialogTitle.tabIndex = -1;
+    presentationDialogMessage = document.createElement("p");
+    presentationDialogMessage.className = "received-note";
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "secondary-button";
+    close.textContent = labels.close;
+    close.addEventListener("click", () => presentationDialog.close());
+    presentationDialog.append(
+      presentationDialogTitle,
+      presentationDialogMessage,
+      close,
+    );
+    document.body.append(presentationDialog);
+  }
+
+  if (presentationDialog.open) presentationDialog.close();
+  presentationDialogTitle.textContent = title;
+  presentationDialogMessage.textContent = message;
+  presentationDialog.showModal();
+  presentationDialogTitle.focus();
+}
+
+function completePresentationOpen(card, title, message, animationDuration) {
+  celebrate();
+  window.setTimeout(() => {
+    if (card.isConnected) showPresentationMessage(title, message);
+  }, animationDuration);
 }
 
 function loadEnvelopeTemplate() {
@@ -157,7 +202,7 @@ function enhanceSnippet(note) {
           seal.setAttribute("aria-expanded", "true");
           text.setAttribute("aria-hidden", "false");
           envelopeWrapper.classList.add("flap");
-          celebrate();
+          completePresentationOpen(card, presentation.label, message, 1500);
         });
         card.append(envelopeWrapper);
       })
@@ -191,7 +236,7 @@ function enhanceSnippet(note) {
         lid.disabled = true;
         paper.setAttribute("aria-hidden", "false");
         gift.classList.add("is-open");
-        celebrate();
+        completePresentationOpen(card, presentation.label, message, 800);
         return;
       }
       lastClick = now;
@@ -216,7 +261,7 @@ function enhanceSnippet(note) {
       control.disabled = true;
       paper.setAttribute("aria-hidden", "false");
       scroll.classList.add("is-open");
-      celebrate();
+      completePresentationOpen(card, presentation.label, message, 850);
     });
     scroll.append(control, paper);
     card.append(scroll);
@@ -242,7 +287,7 @@ function enhanceSnippet(note) {
       cover.disabled = true;
       inside.setAttribute("aria-hidden", "false");
       greeting.classList.add("is-open");
-      celebrate();
+      completePresentationOpen(card, presentation.label, message, 800);
     });
     greeting.append(inside, cover);
     card.append(greeting);

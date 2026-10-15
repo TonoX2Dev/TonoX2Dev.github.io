@@ -550,6 +550,17 @@ a:not(.action):not(.download):focus-visible {
   max-height: min(85vh, 900px);
 }
 
+.enhancement-dialog > .received-note {
+  max-height: 65vh;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.enhancement-dialog > button {
+  min-width: 88px;
+}
+
 .enhancement-dialog::backdrop {
   background: rgb(0 0 0 / 72%);
   backdrop-filter: blur(4px);
@@ -718,6 +729,15 @@ a:not(.action):not(.download):focus-visible {
   transform: scaleX(-1) rotate(28deg);
 }
 
+.gift-lid:hover,
+.gift-lid:focus-visible {
+  color: var(--gift-ink);
+  background-color: transparent;
+  border-color: var(--gift-trim);
+  box-shadow: 0 6px 12px var(--gift-shadow);
+  transform: none;
+}
+
 .gift-lid:focus-visible,
 .greeting-cover:focus-visible,
 .scroll-open:focus-visible {
@@ -835,6 +855,15 @@ a:not(.action):not(.download):focus-visible {
   backface-visibility: hidden;
 }
 
+.greeting-cover:hover,
+.greeting-cover:focus-visible {
+  color: #fff5df;
+  background-color: transparent;
+  border-color: #ffe09a;
+  box-shadow: none;
+  transform: none;
+}
+
 .greeting-card.is-open .greeting-cover {
   transform: rotateY(-155deg);
 }
@@ -890,6 +919,15 @@ a:not(.action):not(.download):focus-visible {
 
 .scroll-open::after {
   right: -8px;
+}
+
+.scroll-open:hover,
+.scroll-open:focus-visible {
+  color: #fff5dc;
+  background-color: transparent;
+  border-color: #9a642e;
+  box-shadow: 0 5px 12px rgb(91 52 20 / 30%);
+  transform: none;
 }
 
 .announcement-scroll.is-open .scroll-open {

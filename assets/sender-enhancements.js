@@ -8,11 +8,13 @@ if (textarea && mode && sendButton) {
     () => {
       if (mode.value === "none") return;
 
-      const original = textarea.value;
-      textarea.value = `[[TONOFASTCODE:DISPLAY:${mode.value}]]\n${original}`;
-      queueMicrotask(() => {
-        textarea.value = original;
-      });
+      textarea.value = `[[TONOFASTCODE:DISPLAY:${mode.value}]]\n${textarea.value}`;
+      window.setTimeout(() => {
+        textarea.value = textarea.value.replace(
+          /^\[\[TONOFASTCODE:DISPLAY:(?:letter|greeting|birthday|christmas|scroll)\]\]\n/,
+          "",
+        );
+      }, 0);
     },
     { capture: true },
   );
