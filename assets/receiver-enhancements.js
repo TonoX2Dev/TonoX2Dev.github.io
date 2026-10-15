@@ -18,19 +18,13 @@ const labels =
         animationFailed: "โหลดภาพเคลื่อนไหวไม่สำเร็จ",
         previewTitle: "ตัวอย่างเอกสาร",
         previewLoading: "กำลังเตรียมตัวอย่าง…",
-        previewFailed: "ไม่สามารถเปิดดูได้ กรุณาดาวน์โหลดไฟล์เพื่อรับชม",
+        previewFailed: "ไม่สามารถเปิดดูได้",
         downloadFile: "ดาวน์โหลดไฟล์",
         downloadToView: "ดาวน์โหลดเพื่อเปิดดู",
+        downloadPack: "ดาวน์โหลด",
+        packAuthors: "ผู้สร้าง",
         packName: "ชื่อแพ็ก",
-        packDescription: "รายละเอียด",
-        packVersion: "เวอร์ชัน",
-        packType: "ประเภทแพ็ก",
-        fileFormat: "รูปแบบไฟล์",
-        resourcePack: "แพ็กทรัพยากร",
-        behaviorPack: "แพ็กพฤติกรรม",
-        scriptPack: "แพ็กสคริปต์",
         packIconMissing: "ไม่มีไอคอนแพ็ก",
-        worldSave: "โลก Minecraft",
         notSpecified: "ไม่ระบุ",
       }
     : {
@@ -48,19 +42,13 @@ const labels =
         animationFailed: "Could not load the presentation animation.",
         previewTitle: "Document preview",
         previewLoading: "Preparing preview…",
-        previewFailed: "Could not preview this file. Please download it to view.",
+        previewFailed: "Could not preview this file.",
         downloadFile: "Download file",
         downloadToView: "Download to View",
+        downloadPack: "Download",
+        packAuthors: "Created by",
         packName: "Pack name",
-        packDescription: "Description",
-        packVersion: "Version",
-        packType: "Pack type",
-        fileFormat: "File format",
-        resourcePack: "Resource pack",
-        behaviorPack: "Behavior pack",
-        scriptPack: "Script pack",
         packIconMissing: "Pack icon unavailable",
-        worldSave: "Minecraft world",
         notSpecified: "Not specified",
       };
 
@@ -506,12 +494,29 @@ function showDocumentPreviewFallback(download, container, mobile = false) {
   const message = document.createElement("p");
   message.className = "document-preview-fallback";
   message.textContent = labels.previewFailed;
+  const fileName = document.createElement("p");
+  fileName.className = "document-preview-file";
+  fileName.textContent = download.download;
   const link = document.createElement("a");
-  link.className = "download document-preview-download";
+  link.className = "document-preview-download";
   link.href = download.href;
   link.download = download.download;
-  link.textContent = mobile ? labels.downloadToView : labels.downloadFile;
-  container.replaceChildren(message, link);
+  link.setAttribute("aria-label", `${mobile ? labels.downloadToView : labels.downloadFile}: ${download.download}`);
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("fill", "none");
+  icon.setAttribute("stroke", "currentColor");
+  icon.setAttribute("stroke-width", "2");
+  icon.setAttribute("stroke-linecap", "round");
+  icon.setAttribute("stroke-linejoin", "round");
+  icon.setAttribute("aria-hidden", "true");
+  const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  iconPath.setAttribute("d", "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3");
+  icon.append(iconPath);
+  const linkText = document.createElement("span");
+  linkText.textContent = mobile ? labels.downloadToView : labels.downloadFile;
+  link.append(icon, linkText);
+  container.replaceChildren(message, fileName, link);
 }
 
 function showPackPreviewFallback(download, container, error) {
@@ -603,15 +608,23 @@ function normalizePackValue(value) {
     : "";
 }
 
-function appendPackField(card, label, value) {
-  const field = document.createElement("p");
-  field.className = "minecraft-pack-field";
-  const name = document.createElement("strong");
-  name.textContent = `${label}: `;
-  const content = document.createElement("span");
-  content.textContent = value;
-  field.append(name, content);
-  card.append(field);
+function normalizePackAuthors(manifest) {
+  const authors =
+    manifest.metadata?.authors ??
+    manifest.header?.authors ??
+    manifest.metadata?.author ??
+    manifest.header?.author;
+  const entries = Array.isArray(authors) ? authors : [authors];
+  return entries
+    .map((author) => {
+      if (typeof author === "string") return author;
+      if (author && typeof author === "object") {
+        return normalizePackValue(author.name ?? author.displayName ?? "");
+      }
+      return "";
+    })
+    .filter(Boolean)
+    .join(", ");
 }
 
 async function readMinecraftPacks(download) {
@@ -754,7 +767,7 @@ async function renderMinecraftPreview(download, container) {
 
     const packList = document.createElement("div");
     packList.className = "minecraft-pack-list";
-    const fileType = extensionOf(download.download).toUpperCase();
+    const fileType = `.${extensionOf(download.download)}`;
     for (const pack of packs) {
       const card = document.createElement("article");
       card.className = "minecraft-pack-card";
@@ -790,42 +803,69 @@ async function renderMinecraftPreview(download, container) {
       }
       const details = document.createElement("div");
       details.className = "minecraft-pack-details";
-      const moduleTypes = new Set(
-        (Array.isArray(pack.manifest.modules) ? pack.manifest.modules : [])
-          .map((module) =>
-            module && typeof module.type === "string"
-              ? module.type.toLowerCase()
-              : "",
-          )
-          .filter(Boolean),
+      const name = document.createElement("h3");
+      name.className = "minecraft-pack-name";
+      name.textContent =
+        normalizePackValue(pack.header.name) || labels.notSpecified;
+      const description = document.createElement("p");
+      description.className = "minecraft-pack-description";
+      description.textContent =
+        normalizePackValue(pack.header.description) || labels.notSpecified;
+      const author = document.createElement("p");
+      author.className = "minecraft-pack-author";
+      const authors = normalizePackAuthors(pack.manifest);
+      author.textContent = `${labels.packAuthors}: ${authors || labels.notSpecified}`;
+      const badges = document.createElement("div");
+      badges.className = "minecraft-pack-badges";
+      const formatBadge = document.createElement("span");
+      formatBadge.className = "minecraft-pack-badge minecraft-pack-format";
+      formatBadge.textContent = fileType;
+      const versionBadge = document.createElement("span");
+      versionBadge.className = "minecraft-pack-badge minecraft-pack-version";
+      const version = normalizePackValue(pack.header.version);
+      versionBadge.textContent = version
+        ? `v${version.replace(/^v/i, "")}`
+        : labels.notSpecified;
+      badges.append(formatBadge, versionBadge);
+      details.append(name, description, author, badges);
+
+      const downloadLink = document.createElement("a");
+      downloadLink.className = "minecraft-pack-download";
+      downloadLink.href = download.href;
+      downloadLink.download = download.download;
+      downloadLink.setAttribute(
+        "aria-label",
+        `${labels.downloadPack}: ${download.download}`,
       );
-      const packTypes = [];
-      if (moduleTypes.has("resources")) packTypes.push(labels.resourcePack);
-      if (moduleTypes.has("data")) packTypes.push(labels.behaviorPack);
-      if (moduleTypes.has("script")) packTypes.push(labels.scriptPack);
-      const packType = packTypes.length
-        ? packTypes.join(", ")
-        : pack.header.type === "world"
-          ? labels.worldSave
-          : normalizePackValue(pack.header.type);
-      appendPackField(
-        details,
-        labels.packName,
-        normalizePackValue(pack.header.name) || labels.notSpecified,
+      const downloadIcon = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "svg",
       );
-      appendPackField(
-        details,
-        labels.packDescription,
-        normalizePackValue(pack.header.description) || labels.notSpecified,
+      downloadIcon.setAttribute("viewBox", "0 0 24 24");
+      downloadIcon.setAttribute("fill", "none");
+      downloadIcon.setAttribute("stroke", "currentColor");
+      downloadIcon.setAttribute("stroke-width", "2");
+      downloadIcon.setAttribute("stroke-linecap", "round");
+      downloadIcon.setAttribute("stroke-linejoin", "round");
+      downloadIcon.setAttribute("aria-hidden", "true");
+      const downloadPath = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path",
       );
-      appendPackField(
-        details,
-        labels.packVersion,
-        normalizePackValue(pack.header.version) || labels.notSpecified,
+      downloadPath.setAttribute(
+        "d",
+        "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3",
       );
-      appendPackField(details, labels.packType, packType || labels.notSpecified);
-      appendPackField(details, labels.fileFormat, fileType);
-      card.append(details);
+      downloadIcon.append(downloadPath);
+      downloadLink.append(downloadIcon);
+
+      const content = document.createElement("div");
+      content.className = "minecraft-pack-content";
+      content.append(details);
+      const action = document.createElement("div");
+      action.className = "minecraft-pack-action";
+      action.append(downloadLink);
+      card.append(content, action);
       packList.append(card);
     }
     container.replaceChildren(packList);
@@ -842,15 +882,6 @@ function renderDocumentViewer(fileUrl, fileExtension, download, container) {
   container.classList.remove("document-preview-fallback-card");
 
   const ext = fileExtension.toLowerCase();
-  if (minecraftExtensions.has(ext)) {
-    if (isMobilePreviewDevice()) {
-      showDocumentPreviewFallback(download, container, true);
-    } else {
-      void renderMinecraftPreview(download, container);
-    }
-    return;
-  }
-
   if (isMobilePreviewDevice()) {
     showDocumentPreviewFallback(download, container, true);
     return;
@@ -879,14 +910,14 @@ function renderDocumentViewer(fileUrl, fileExtension, download, container) {
     return;
   }
 
-  if (["txt", "md"].includes(ext)) {
+  if (ext === "txt") {
     const frame = createDocumentFrame(fileUrl, labels.previewTitle);
     container.dataset.previewState = "rendered";
     appendPreviewFrame(frame, download, container);
     return;
   }
 
-  if (!["docx", "xlsx", "pptx", "doc", "xls", "ppt"].includes(ext)) {
+  if (!["docx", "xlsx"].includes(ext)) {
     showDocumentPreviewFallback(download, container);
     return;
   }
@@ -939,30 +970,59 @@ function renderDocumentViewer(fileUrl, fileExtension, download, container) {
 
 function addDocumentPreview(download) {
   const extension = extensionOf(download.download);
+  const documentTypes = new Set(["pdf", "docx", "xlsx", "txt"]);
+  const documentPreview = result.querySelector("[data-document-preview]");
+  const minecraftPreview = result.querySelector("[data-minecraft-preview]");
 
-  const existing = result.querySelector("[data-document-preview]");
-  if (existing?.dataset.source === download.href) return;
+  if (documentTypes.has(extension)) {
+    minecraftPreview?.remove();
+    if (documentPreview?.dataset.source === download.href) return;
+    documentPreview?.remove();
+    releaseMinecraftIconUrls();
+    const preview = document.createElement("section");
+    preview.className = "document-preview";
+    preview.dataset.documentPreview = "true";
+    preview.dataset.source = download.href;
+    const heading = document.createElement("h2");
+    heading.textContent = labels.previewTitle;
+    const container = document.createElement("div");
+    container.id = "document-preview-container";
+    container.className = "document-preview-content";
+    container.dataset.previewState = "pending";
+    preview.append(heading, container);
+    result.append(preview);
+    renderDocumentViewer(download.href, extension, download, container);
+    return;
+  }
 
+  if (minecraftExtensions.has(extension)) {
+    documentPreview?.remove();
+    if (minecraftPreview?.dataset.source === download.href) return;
+    minecraftPreview?.remove();
+    releaseMinecraftIconUrls();
+    const preview = document.createElement("section");
+    preview.className = "minecraft-preview";
+    preview.dataset.minecraftPreview = "true";
+    preview.dataset.source = download.href;
+    result.append(preview);
+    if (isMobilePreviewDevice()) {
+      showDocumentPreviewFallback(download, preview, true);
+    } else {
+      void renderMinecraftPreview(download, preview);
+    }
+    return;
+  }
+
+  documentPreview?.remove();
+  minecraftPreview?.remove();
   releaseMinecraftIconUrls();
-  const preview = document.createElement("section");
-  preview.className = "document-preview";
-  preview.dataset.documentPreview = "true";
-  preview.dataset.source = download.href;
-  const heading = document.createElement("h2");
-  heading.textContent = labels.previewTitle;
-  const container = document.createElement("div");
-  container.id = "document-preview-container";
-  container.className = "document-preview-content";
-  container.dataset.previewState = "pending";
-  preview.append(heading, container);
-
-  if (existing) existing.replaceWith(preview);
-  else result.append(preview);
-  renderDocumentViewer(download.href, extension, download, container);
 }
 
 function updateResult() {
-  if (!result.querySelector("[data-document-preview]")) {
+  if (
+    !result.querySelector("[data-document-preview]") &&
+    !result.querySelector("[data-minecraft-preview]")
+  ) {
     releaseMinecraftIconUrls();
   }
 

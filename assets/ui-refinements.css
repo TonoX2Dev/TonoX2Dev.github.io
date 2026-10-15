@@ -607,15 +607,17 @@ a:not(.action):not(.download):focus-visible {
   min-width: 0;
 }
 
-.document-preview-content.document-preview-fallback-card {
+.document-preview-content.document-preview-fallback-card,
+.minecraft-preview.document-preview-fallback-card {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
-  padding: 16px;
+  padding: 24px 16px;
   background: var(--panel);
   border: 1px solid var(--line-bright);
   border-radius: 10px;
+  text-align: center;
 }
 
 .document-preview-pages {
@@ -654,13 +656,45 @@ a:not(.action):not(.download):focus-visible {
 .document-preview-fallback {
   margin: 0;
   color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.document-preview-file {
+  max-width: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-dim);
 }
 
 .document-preview-download {
-  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
   min-height: 44px;
   padding: 10px 16px;
+  color: #fff;
+  background: #1a73e8;
+  border: 1px solid #1a73e8;
+  border-radius: 8px;
   font-weight: 700;
+  text-decoration: none;
+}
+
+.document-preview-download svg,
+.minecraft-pack-download svg {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.document-preview-download:hover,
+.document-preview-download:focus-visible {
+  color: #fff;
+  background: #1558b0;
+  border-color: #1558b0;
+  box-shadow: 0 2px 8px rgb(26 115 232 / 30%);
 }
 
 .minecraft-pack-list {
@@ -670,15 +704,15 @@ a:not(.action):not(.download):focus-visible {
 
 .minecraft-pack-card {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  align-items: start;
-  gap: 16px;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
   padding: 16px;
-  color: #202124;
-  background: #fff;
-  border: 1px solid #d2d6dc;
-  border-radius: 10px;
-  box-shadow: 0 3px 12px rgb(0 0 0 / 10%);
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line-bright);
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgb(0 0 0 / 18%);
 }
 
 .minecraft-pack-icon,
@@ -687,8 +721,8 @@ a:not(.action):not(.download):focus-visible {
   width: 88px;
   height: 88px;
   place-items: center;
-  border: 1px solid #d2d6dc;
-  border-radius: 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
 }
 
 .minecraft-pack-icon {
@@ -698,30 +732,94 @@ a:not(.action):not(.download):focus-visible {
 
 .minecraft-pack-icon-fallback {
   padding: 6px;
-  color: #5f6368;
-  background: #f1f3f4;
+  color: var(--muted);
+  background: var(--panel-strong);
   font-size: 11px;
   line-height: 1.35;
   text-align: center;
 }
 
+.minecraft-pack-content,
 .minecraft-pack-details {
   min-width: 0;
 }
 
-.minecraft-pack-field {
+.minecraft-pack-name {
+  margin: 0 0 5px;
+  overflow-wrap: anywhere;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.minecraft-pack-description,
+.minecraft-pack-author {
   margin: 0 0 6px;
   overflow-wrap: anywhere;
-  color: #3c4043;
-  font: 14px/1.5 Arial, Helvetica, sans-serif;
+  color: var(--text-dim);
+  font-size: 0.92rem;
 }
 
-.minecraft-pack-field:last-child {
-  margin-bottom: 0;
+.minecraft-pack-author {
+  color: var(--muted);
 }
 
-.minecraft-pack-field strong {
-  color: #202124;
+.minecraft-pack-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.minecraft-pack-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.minecraft-pack-format {
+  color: #8be0a4;
+  background: rgb(24 128 56 / 16%);
+  border: 1px solid rgb(82 196 112 / 48%);
+}
+
+.minecraft-pack-version {
+  color: #ffdc78;
+  background: rgb(251 188 4 / 15%);
+  border: 1px solid rgb(251 188 4 / 48%);
+}
+
+.minecraft-pack-action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.minecraft-pack-download {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #fff;
+  background: #1a73e8;
+  border: 1px solid #1a73e8;
+  border-radius: 9px;
+  text-decoration: none;
+}
+
+.minecraft-pack-download:hover,
+.minecraft-pack-download:focus-visible {
+  color: #fff;
+  background: #1558b0;
+  border-color: #1558b0;
+  box-shadow: 0 2px 8px rgb(26 115 232 / 30%);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 520px) {
@@ -736,6 +834,50 @@ a:not(.action):not(.download):focus-visible {
     width: 64px;
     height: 64px;
   }
+
+  .minecraft-pack-action {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+}
+
+.tonofastcode-info {
+  margin: 22px 0;
+  padding: clamp(18px, 4vw, 28px);
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 100% 0, rgba(var(--accent-rgb), 0.1), transparent 42%),
+    var(--panel);
+  border: 1px solid var(--line-bright);
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgb(var(--accent-rgb) / 8%);
+}
+
+.tonofastcode-info h2 {
+  margin: 0 0 10px;
+  color: var(--text);
+}
+
+.tonofastcode-info > p {
+  max-width: 75ch;
+  margin: 0;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+.tonofastcode-info h3 {
+  margin: 20px 0 8px;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.tonofastcode-info ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: var(--text-dim);
+  line-height: 1.55;
 }
 
 .snippet-presentation {

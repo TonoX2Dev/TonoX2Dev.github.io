@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Add-on & Document Viewer Test</title>
+    <!-- Libraries จาก CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: #121212;
+            color: #e0e0e0;
+            margin: 0;
+        }
+
+        h2 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+            color: #38ef7d;
+        }
+
+        .card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            background: #2a2a2a;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        /* Minecraft Card Style */
+        .mc-info-card {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            background: #252525;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #38ef7d;
+            margin-top: 15px;
+        }
+
+        .mc-icon {
+            width: 96px;
+            height: 96px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #111;
+            border: 2px solid #444;
+            image-rendering: pixelated;
+        }
+
+        .mc-details {
+            flex: 1;
+        }
+
+        .mc-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            margin: 0 0 5px 0;
+        }
+
+        .mc-desc {
+            color: #aaa;
+            font-size: 0.95rem;
+            margin: 0 0 8px 0;
+        }
+
+        .mc-badge {
+            display: inline-block;
+            background: #38ef7d22;
+            color: #38ef7d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        /* Viewer Box Style */
+        #document-box {
+            width: 100%;
+            min-height: 400px;
+            max-height: 600px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: #1a1a1a;
+            margin-top: 15px;
+            overflow: auto;
+            padding: 15px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            color: #fff;
+        }
+
+        th,
+        td {
+            border: 1px solid #444;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #333;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #38ef7d;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SECTION 1: MINECRAFT ADD-ON READER -->
+    <div class="card">
+        <h2>🎮 1. ทดสอบอ่านไฟล์ Minecraft Add-on (.mcpack / .mcaddon / .zip)</h2>
+        <input type="file" id="mc-input" accept=".mcpack, .mcaddon, .zip">
+        <div id="mc-result"></div>
+    </div>
+
+    <!-- SECTION 2: DOCUMENT VIEWER -->
+    <div class="card">
+        <h2>📄 2. ทดสอบ Document Preview (.pdf / .docx / .xlsx / .txt)</h2>
+        <input type="file" id="doc-input" accept=".pdf, .docx, .xlsx, .txt">
+        <div id="document-box">
+            <p style="color: #777; text-align: center; margin-top: 150px;">เลือกไฟล์เอกสารเพื่อแสดงตัวอย่างที่นี่</p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. LOGIC FOR MINECRAFT PACK PARSER
+        // ==========================================
+        document.getElementById('mc-input').addEventListener('change', async function (e) {
+            const file = e.target.files[0];
+            const resultBox = document.getElementById('mc-result');
+            if (!file) return;
+
+            resultBox.innerHTML = '<p style="color:#aaa;">กำลังอ่านข้อมูลไฟล์ Minecraft...</p>';
+
+            try {
+                const zip = new JSZip();
+                const zipContent = await zip.loadAsync(file);
+
+                // หาไฟล์ manifest.json และ pack_icon.png (เผื่อมันอยู่ในโฟลเดอร์ย่อย)
+                let manifestFile = null;
+                let iconFile = null;
+
+                zipContent.forEach((relativePath, fileEntry) => {
+                    if (relativePath.toLowerCase().endsWith('manifest.json')) {
+                        manifestFile = fileEntry;
+                    }
+                    if (relativePath.toLowerCase().endsWith('pack_icon.png')) {
+                        iconFile = fileEntry;
+                    }
+                });
+
+                if (!manifestFile) {
+                    resultBox.innerHTML = '<p style="color:#ff5555;">❌ ไม่พบไฟล์ manifest.json ในไฟล์นี้</p>';
+                    return;
+                }
+
+                // อ่านไฟล์ manifest.json
+                const manifestText = await manifestFile.async('string');
+                const manifestData = JSON.parse(manifestText);
+
+                const header = manifestData.header || {};
+                const packName = header.name || 'ไม่ระบุชื่อ Pack';
+                const packDesc = header.description || 'ไม่มีคำอธิบาย';
+                const version = header.version ? header.version.join('.') : '1.0.0';
+                const packType = manifestData.format_version ? `Format v${manifestData.format_version}` : 'Add-on';
+
+                // ดึง รูปภาพ pack_icon.png
+                let iconUrl = 'https://via.placeholder.com/96?text=No+Icon'; // รูปสำรอง
+                if (iconFile) {
+                    const iconBlob = await iconFile.async('blob');
+                    iconUrl = URL.createObjectURL(iconBlob);
+                }
+
+                // เรนเดอร์ Card ข้อมูล Minecraft
+                resultBox.innerHTML = `
+          <div class="mc-info-card">
+            <img src="${iconUrl}" class="mc-icon" alt="Pack Icon">
+            <div class="mc-details">
+              <h3 class="mc-title">${escapeHtml(packName)}</h3>
+              <p class="mc-desc">${escapeHtml(packDesc)}</p>
+              <div>
+                <span class="mc-badge">v${version}</span>
+                <span class="mc-badge" style="color:#00aaff; background:#00aaff22;">${packType}</span>
+                <span class="mc-badge" style="color:#ffaa00; background:#ffaa0022;">${file.name.split('.').pop().toUpperCase()}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+            } catch (err) {
+                console.error(err);
+                resultBox.innerHTML = `<p style="color:#ff5555;">❌ เกิดข้อผิดพลาดในการอ่านไฟล์: ${err.message}</p>`;
+            }
+        });
+
+        // ==========================================
+        // 2. LOGIC FOR DOCUMENT VIEWER
+        // ==========================================
+        document.getElementById('doc-input').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            const docBox = document.getElementById('document-box');
+            if (!file) return;
+
+            const ext = file.name.split('.').pop().toLowerCase();
+            docBox.innerHTML = '<p style="color:#aaa;">กำลังโหลดตัวอย่างเอกสาร...</p>';
+
+            // 2.1 PDF File
+            if (ext === 'pdf') {
+                const fileUrl = URL.createObjectURL(file);
+                docBox.innerHTML = `<iframe src="${fileUrl}"></iframe>`;
+            }
+            // 2.2 Word File (.docx)
+            else if (ext === 'docx') {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    mammoth.convertToHtml({ arrayBuffer: evt.target.result })
+                        .then(result => {
+                            docBox.innerHTML = `<div style="background:#fff; color:#000; padding:20px; border-radius:8px;">${result.value}</div>`;
+                        })
+                        .catch(err => { docBox.innerHTML = `<p style="color:#ff5555;">ไม่สามารถอ่านไฟล์ Word ได้</p>`; });
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            // 2.3 Excel File (.xlsx)
+            else if (ext === 'xlsx') {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    const data = new Uint8Array(evt.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const htmlTable = XLSX.utils.sheet_to_html(firstSheet);
+                    docBox.innerHTML = `<div style="overflow-x:auto;">${htmlTable}</div>`;
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            // 2.4 Text File (.txt)
+            else if (ext === 'txt') {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    docBox.innerHTML = `<pre>${escapeHtml(evt.target.result)}</pre>`;
+                };
+                reader.readAsText(file);
+            }
+            else {
+                docBox.innerHTML = `<p style="color:#ff5555;">ไม่รองรับไฟล์ประเภท .${ext}</p>`;
+            }
+        });
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+
+</html>
