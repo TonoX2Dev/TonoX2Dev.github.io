@@ -27,7 +27,6 @@ const labels =
         downloadFile: "ดาวน์โหลดไฟล์",
         downloadPack: "ดาวน์โหลด",
         packAuthors: "ผู้สร้าง",
-        unknownCreator: "ไม่ทราบผู้สร้าง",
         packIconMissing: "ไม่มีไอคอนแพ็ก",
       }
     : {
@@ -54,7 +53,6 @@ const labels =
         downloadFile: "Download file",
         downloadPack: "Download",
         packAuthors: "Created by",
-        unknownCreator: "Unknown Creator",
         packIconMissing: "Pack icon unavailable",
       };
 
@@ -479,7 +477,9 @@ function isMobilePreviewDevice() {
 
 function normalizeMinecraftValue(value, fallback = "") {
   if (Array.isArray(value)) return value.map(String).join(".");
-  if (typeof value === "string" || typeof value === "number") return String(value);
+  if (typeof value === "string" || typeof value === "number") {
+    return String(value).trim() || fallback;
+  }
   return fallback;
 }
 
@@ -492,10 +492,15 @@ function renderMinecraftPackCard(container, fileName, extension, downloadUrl, ma
     document.documentElement.lang === "th" ? "??????????????????????" : "No description provided.",
   );
   const version = normalizeMinecraftValue(header.version, "1.0.0");
-  const authorValue = metadata.authors ?? metadata.author ?? labels.unknownCreator;
-  const authors = Array.isArray(authorValue)
-    ? authorValue.map((author) => typeof author === "string" ? author : normalizeMinecraftValue(author?.name ?? author?.displayName)).filter(Boolean).join(", ")
-    : normalizeMinecraftValue(authorValue, labels.unknownCreator);
+  const authorValue = metadata.authors ?? metadata.author;
+  const authors = (Array.isArray(authorValue) ? authorValue : [authorValue])
+    .map((author) =>
+      typeof author === "string"
+        ? author.trim()
+        : normalizeMinecraftValue(author?.name ?? author?.displayName).trim(),
+    )
+    .filter(Boolean)
+    .join(", ");
   const card = document.createElement("article");
   card.className = "minecraft-pack-card mc-card";
   card.setAttribute("aria-label", packName);
@@ -509,7 +514,7 @@ function renderMinecraftPackCard(container, fileName, extension, downloadUrl, ma
   summary.textContent = description;
   const creator = document.createElement("p");
   creator.className = "minecraft-pack-author";
-  creator.textContent = labels.packAuthors + ": " + (authors || labels.unknownCreator);
+  creator.textContent = labels.packAuthors + ": " + authors;
   const badges = document.createElement("div");
   badges.className = "minecraft-pack-badges";
   const formatBadge = document.createElement("span");
@@ -519,7 +524,9 @@ function renderMinecraftPackCard(container, fileName, extension, downloadUrl, ma
   versionBadge.className = "minecraft-pack-badge minecraft-pack-version";
   versionBadge.textContent = "v" + version.replace(/^v/i, "");
   badges.append(formatBadge, versionBadge);
-  details.append(title, summary, creator, badges);
+  details.append(title, summary);
+  if (authors) details.append(creator);
+  details.append(badges);
 
   if (iconFile) {
     const icon = document.createElement("img");
@@ -768,12 +775,16 @@ async function processFilePreview(fileBlob, fileName, fileType, containerElement
         return;
       }
     } catch (error) {
-      console.warn("Minecraft add-on parsing failed; showing the download fallback.", error);
+      console.warn("Minecraft add-on parsing failed.", error);
     }
+  }
+  if (archiveExtensions.includes(ext)) {
+    skipNonDocumentPreview(containerElement);
+    return;
   }
   if (containerElement.dataset.previewState !== "pending") return;
 
-  if (["pdf", "docx", "xlsx", "txt", "md"].includes(ext)) {
+  if (["pdf", "docx", "xlsx", "txt"].includes(ext)) {
     try {
       if (ext === "pdf") {
         containerElement.dataset.downloadUrl = downloadUrl || "";
@@ -834,7 +845,7 @@ async function processFilePreview(fileBlob, fileName, fileType, containerElement
         return;
       }
 
-      if (["txt", "md"].includes(ext)) {
+      if (ext === "txt") {
         const pre = document.createElement("pre");
         pre.className = "document-preview-text";
         pre.textContent = await previewBlob.text();
@@ -853,8 +864,9 @@ async function processFilePreview(fileBlob, fileName, fileType, containerElement
 
 function addDocumentPreview(download) {
   const extension = extensionOf(download.download);
-  const documentTypes = new Set(["pdf", "docx", "xlsx", "txt", "md"]);
+  const documentTypes = new Set(["pdf", "docx", "xlsx", "txt"]);
   const archiveTypes = new Set(["mcaddon", "mcpack", "mcworld", "zip"]);
+  if (download.dataset.previewSkipped === download.href) return;
   const existing = result.querySelector("[data-file-preview]");
   if (existing?.dataset.source === download.href) return;
 
@@ -875,6 +887,8 @@ function addDocumentPreview(download) {
   previewDisposers.clear();
   for (const url of previewObjectUrls) URL.revokeObjectURL(url);
   previewObjectUrls.clear();
+  if (!documentTypes.has(extension) && !archiveTypes.has(extension)) return;
+  delete download.dataset.previewSkipped;
   const preview = document.createElement("section");
   preview.className = documentTypes.has(extension) ? "document-preview" : "file-preview";
   preview.dataset.filePreview = "true";
@@ -884,6 +898,7 @@ function addDocumentPreview(download) {
   const container = document.createElement("div");
   container.className = "document-preview-content";
   container.dataset.previewState = "pending";
+  container._downloadLink = download;
   if (documentTypes.has(extension)) {
     const heading = document.createElement("h2");
     heading.textContent = labels.previewTitle;
@@ -926,9 +941,21 @@ function addDocumentPreview(download) {
   ]).catch((error) => {
     console.error("Could not prepare the file preview.", error);
     if (container.dataset.previewState === "pending") {
-      renderFallbackDownload(container, download.download, download.href, labels.previewFailed);
+      if (archiveTypes.has(extension)) {
+        skipNonDocumentPreview(container);
+      } else if (documentTypes.has(extension)) {
+        renderFallbackDownload(container, download.download, download.href, labels.previewFailed);
+      }
     }
   }).finally(() => window.clearTimeout(timeoutId));
+}
+
+function skipNonDocumentPreview(container) {
+  if (!container) return;
+  container.dataset.previewState = "skipped";
+  const download = container._downloadLink;
+  if (download) download.dataset.previewSkipped = download.href;
+  container.closest("[data-file-preview]")?.remove();
 }
 
 function updateResult() {

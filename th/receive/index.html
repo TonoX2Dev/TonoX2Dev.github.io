@@ -18,6 +18,7 @@
     <script type="module" src="../../assets/theme-switcher.js"></script>
     <script type="module" src="../../assets/share-target.js"></script>
     <script type="module" src="../../assets/receiver-enhancements.js"></script>
+    <script type="module" src="../../assets/register-service-worker.js"></script>
     <link rel="modulepreload" crossorigin href="../../assets/dialog-BCNB4hJ8.js">
     <link rel="modulepreload" crossorigin href="../../assets/wake-lock-BlIwRfLh.js">
     <link rel="stylesheet" crossorigin href="../../assets/dialog-lwSt6g5n.css">
@@ -142,27 +143,5 @@
         <span>v2.0.0 - by tonox2dev</span>
       </span>
       </footer>
-  <script>if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-
-    const wasControlled = !!navigator.serviceWorker.controller;
-    let reloading = false;
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      if (!wasControlled || reloading) return;
-      reloading = true;
-      location.reload();
-    });
-    navigator.serviceWorker.register("../../sw.js", { scope: "../../" }).then((reg) => {
-      const promote = (worker) => worker && worker.postMessage({ type: "SKIP_WAITING" });
-      promote(reg.waiting);
-      reg.addEventListener("updatefound", () => {
-        const next = reg.installing;
-        if (!next) return;
-        next.addEventListener("statechange", () => {
-          if (next.state === "installed") promote(reg.waiting || next);
-        });
-      });
-    });
-  });
-}</script></body>
+  </body>
 </html>
