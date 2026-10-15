@@ -576,9 +576,9 @@ a:not(.action):not(.download):focus-visible {
 .document-preview iframe {
   display: block;
   width: 100%;
-  height: min(65vh, 720px);
+  height: 500px;
   background: white;
-  border: 1px solid var(--line);
+  border: 0;
 }
 
 .document-preview {
@@ -597,26 +597,6 @@ a:not(.action):not(.download):focus-visible {
 
 .document-preview-content {
   min-width: 0;
-}
-
-.document-preview-pages {
-  display: grid;
-  gap: 12px;
-  max-height: 65vh;
-  overflow: auto;
-  padding: 12px;
-  background: #dfe2e5;
-  border: 1px solid #aeb4ba;
-  border-radius: 8px;
-}
-
-.document-preview-pages canvas {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin-inline: auto;
-  background: #fff;
-  box-shadow: 0 2px 9px rgb(0 0 0 / 24%);
 }
 
 .document-preview pre {

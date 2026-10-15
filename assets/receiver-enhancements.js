@@ -17,7 +17,6 @@ const labels =
         copyFailed: "คัดลอกไม่สำเร็จ",
         animationFailed: "โหลดภาพเคลื่อนไหวไม่สำเร็จ",
         previewTitle: "ตัวอย่างเอกสาร",
-        previewLoading: "กำลังเตรียมตัวอย่าง…",
         previewFailed: "ไม่สามารถแสดงตัวอย่างได้",
       }
     : {
@@ -34,7 +33,6 @@ const labels =
         copyFailed: "Copy failed",
         animationFailed: "Could not load the presentation animation.",
         previewTitle: "Document preview",
-        previewLoading: "Preparing preview…",
         previewFailed: "This preview could not be rendered.",
       };
 
@@ -48,7 +46,6 @@ const presentations = {
 
 let confettiModule;
 let envelopeTemplatePromise;
-let pdfJsModulePromise;
 let presentationDialog;
 let presentationDialogTitle;
 let presentationDialogMessage;
@@ -300,7 +297,7 @@ function extensionOf(name) {
   return name.split(".").pop().toLowerCase();
 }
 
-async function renderOfficePreview(download, body) {
+async function renderLocalOfficePreview(download, container) {
   const { OfficeParser } = await import(
     "https://cdn.jsdelivr.net/npm/officeparser@8.1.1/dist/officeparser.browser.slim.mjs"
   );
@@ -310,98 +307,73 @@ async function renderOfficePreview(download, body) {
   const file = new File([blob], download.download, { type: blob.type });
   const ast = await OfficeParser.parseOffice(file);
   const parsed = await ast.to("text");
-  body.textContent = parsed.value || labels.previewFailed;
+  const preview = document.createElement("pre");
+  preview.textContent = parsed.value || labels.previewFailed;
+  container.replaceChildren(preview);
 }
 
-async function renderPdfPreview(download, body) {
-  const response = await fetch(download.href);
-  if (!response.ok) throw new Error(`Could not read file (${response.status}).`);
+function createDocumentFrame(url, title) {
+  const frame = document.createElement("iframe");
+  frame.src = url;
+  frame.title = title;
+  frame.loading = "lazy";
+  frame.referrerPolicy = "no-referrer";
+  return frame;
+}
 
-  pdfJsModulePromise ??= import(
-    "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs"
-  )
-    .catch((error) => {
-      pdfJsModulePromise = undefined;
-      throw error;
-    });
-  const pdfjs = await pdfJsModulePromise;
-  pdfjs.GlobalWorkerOptions.workerSrc =
-    "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
-  const pdf = await pdfjs.getDocument({
-    data: new Uint8Array(await response.arrayBuffer()),
-  }).promise;
-  const pages = document.createElement("div");
-  pages.className = "document-preview-pages";
-  const availableWidth = Math.max(body.clientWidth || 640, 280);
+function renderDocumentViewer(fileUrl, fileExtension, download, container) {
+  container.replaceChildren();
 
-  try {
-    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
-      const page = await pdf.getPage(pageNumber);
-      const baseViewport = page.getViewport({ scale: 1 });
-      const viewport = page.getViewport({
-        scale: Math.min(1.25, availableWidth / baseViewport.width),
-      });
-      const outputScale = Math.min(window.devicePixelRatio || 1, 2);
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-      if (!context) throw new Error("Could not create a PDF preview canvas.");
-      canvas.width = Math.ceil(viewport.width * outputScale);
-      canvas.height = Math.ceil(viewport.height * outputScale);
-      canvas.style.width = `${viewport.width}px`;
-      canvas.setAttribute("role", "img");
-      canvas.setAttribute(
-        "aria-label",
-        `${download.download}, page ${pageNumber} of ${pdf.numPages}`,
-      );
-      pages.append(canvas);
-      await page.render({
-        canvasContext: context,
-        viewport,
-        transform:
-          outputScale === 1
-            ? undefined
-            : [outputScale, 0, 0, outputScale, 0, 0],
-      }).promise;
-    }
-  } finally {
-    await pdf.destroy();
+  const ext = fileExtension.toLowerCase();
+  if (["pdf", "txt", "md"].includes(ext)) {
+    container.append(createDocumentFrame(fileUrl, labels.previewTitle));
+    return;
   }
 
-  body.replaceChildren(pages);
-}
-
-async function renderFilePreview(download, body) {
-  const extension = extensionOf(download.download);
-  try {
-    if (extension === "pdf") {
-      await renderPdfPreview(download, body);
-    } else if (extension === "txt") {
-      const response = await fetch(download.href);
-      if (!response.ok) throw new Error(`Could not read file (${response.status}).`);
-      const preview = document.createElement("pre");
-      preview.textContent = await response.text();
-      body.replaceChildren(preview);
-    } else {
-      await renderOfficePreview(download, body);
-    }
-  } catch (error) {
-    console.error("Could not render the document preview.", error);
+  if (!["docx", "xlsx", "pptx", "doc", "xls", "ppt"].includes(ext)) {
     const message = document.createElement("p");
-    message.textContent = `${labels.previewFailed} ${String(error)}`;
-    body.replaceChildren(message);
-    if (extension === "pdf") {
-      const frame = document.createElement("iframe");
-      frame.title = download.download;
-      frame.loading = "lazy";
-      frame.src = download.href;
-      body.append(frame);
-    }
+    message.textContent = labels.previewFailed;
+    container.append(message);
+    return;
   }
+
+  if (fileUrl.startsWith("blob:")) {
+    void renderLocalOfficePreview(download, container).catch((error) => {
+      console.error("Could not render the local Office document preview.", error);
+      const message = document.createElement("p");
+      message.textContent = `${labels.previewFailed} ${String(error)}`;
+      container.replaceChildren(message);
+    });
+    return;
+  }
+
+  let parsedUrl;
+  try {
+    parsedUrl = new URL(fileUrl, window.location.href);
+  } catch (error) {
+    console.error("Could not parse the document URL.", error);
+    const message = document.createElement("p");
+    message.textContent = labels.previewFailed;
+    container.append(message);
+    return;
+  }
+
+  if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+    const message = document.createElement("p");
+    message.textContent = labels.previewFailed;
+    container.append(message);
+    return;
+  }
+
+  const viewerUrl = new URL("https://docs.google.com/viewer");
+  viewerUrl.searchParams.set("url", parsedUrl.href);
+  viewerUrl.searchParams.set("embedded", "true");
+  container.append(createDocumentFrame(viewerUrl.href, labels.previewTitle));
 }
 
 function addDocumentPreview(download) {
   const extension = extensionOf(download.download);
-  if (!["pdf", "txt", "docx", "xlsx", "pptx"].includes(extension)) return;
+  if (!["pdf", "txt", "md", "docx", "xlsx", "pptx", "doc", "xls", "ppt"].includes(extension)) return;
 
   const existing = result.querySelector("[data-document-preview]");
   if (existing?.dataset.source === download.href) return;
@@ -412,14 +384,14 @@ function addDocumentPreview(download) {
   preview.dataset.source = download.href;
   const heading = document.createElement("h2");
   heading.textContent = labels.previewTitle;
-  const body = document.createElement("div");
-  body.className = "document-preview-content";
-  body.textContent = labels.previewLoading;
-  preview.append(heading, body);
+  const container = document.createElement("div");
+  container.id = "document-preview-container";
+  container.className = "document-preview-content";
+  preview.append(heading, container);
 
   if (existing) existing.replaceWith(preview);
   else result.append(preview);
-  void renderFilePreview(download, body);
+  renderDocumentViewer(download.href, extension, download, container);
 }
 
 function updateResult() {
