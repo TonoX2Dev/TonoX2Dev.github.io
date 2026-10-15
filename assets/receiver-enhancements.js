@@ -18,7 +18,12 @@ const labels =
         animationFailed: "โหลดภาพเคลื่อนไหวไม่สำเร็จ",
         previewTitle: "ตัวอย่างเอกสาร",
         previewFailed: "ไม่สามารถเปิดดูได้",
-        mobilePdfUnsupported: "ไม่สามารถเปิดดูในมือถือได้",
+        pdfPreviousPage: "หน้าก่อนหน้า",
+        pdfNextPage: "หน้าถัดไป",
+        pdfZoomOut: "ย่อ",
+        pdfZoomIn: "ขยาย",
+        pdfPage: "หน้า",
+        pdfOf: "จาก",
         downloadFile: "ดาวน์โหลดไฟล์",
         downloadPack: "ดาวน์โหลด",
         packAuthors: "ผู้สร้าง",
@@ -40,7 +45,12 @@ const labels =
         animationFailed: "Could not load the presentation animation.",
         previewTitle: "Document preview",
         previewFailed: "Could not preview this file.",
-        mobilePdfUnsupported: "PDF previews are unavailable on mobile. Download the file to view it.",
+        pdfPreviousPage: "Previous page",
+        pdfNextPage: "Next page",
+        pdfZoomOut: "Zoom out",
+        pdfZoomIn: "Zoom in",
+        pdfPage: "Page",
+        pdfOf: "of",
         downloadFile: "Download file",
         downloadPack: "Download",
         packAuthors: "Created by",
@@ -311,6 +321,7 @@ function extensionOf(name) {
 
 const previewLibraries = new Map();
 const previewObjectUrls = new Set();
+const previewDisposers = new Set();
 
 function loadPreviewLibrary(globalName, sourceUrl) {
   if (globalThis[globalName]) return Promise.resolve(globalThis[globalName]);
@@ -420,6 +431,14 @@ function createDownloadIcon() {
 
 function renderFallbackDownload(container, fileName, downloadUrl, message) {
   if (!container) return;
+  const dispose = container._disposePdfPreview || container._cancelPdfPreview;
+  if (dispose) {
+    void dispose().catch((error) => {
+      console.error("Could not release the failed PDF preview.", error);
+    });
+    delete container._disposePdfPreview;
+    delete container._cancelPdfPreview;
+  }
   container.dataset.previewState = "failed";
   container.classList.add("document-preview-fallback-card");
   const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -535,6 +554,186 @@ function renderMinecraftPackCard(container, fileName, extension, downloadUrl, ma
   container.dataset.previewState = "rendered";
 }
 
+async function renderPdfPreview(fileBlob, fileName, container) {
+  const pdfjs = await loadPreviewLibrary(
+    "pdfjsLib",
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+  );
+  if (!container.isConnected || container.dataset.previewState !== "pending") return;
+  pdfjs.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  const documentTask = pdfjs.getDocument({
+    data: new Uint8Array(await fileBlob.arrayBuffer()),
+    isEvalSupported: false,
+    useSystemFonts: true,
+  });
+  container._cancelPdfPreview = () => documentTask.destroy();
+  let pdfDocument;
+  try {
+    pdfDocument = await documentTask.promise;
+  } catch (error) {
+    await documentTask.destroy().catch((destroyError) => {
+      console.error("Could not clean up the failed PDF load.", destroyError);
+    });
+    throw error;
+  }
+  if (!container.isConnected || container.dataset.previewState !== "pending") {
+    await pdfDocument.destroy();
+    delete container._cancelPdfPreview;
+    return;
+  }
+  let currentPage = 1;
+  let zoom = 1;
+  let activeRenderTask;
+  let renderGeneration = 0;
+  let disposePromise;
+  const dispose = () => {
+    disposePromise ??= Promise.resolve()
+      .then(() => {
+        activeRenderTask?.cancel();
+        return pdfDocument.destroy();
+      })
+      .finally(() => previewDisposers.delete(dispose));
+    return disposePromise;
+  };
+  container._disposePdfPreview = dispose;
+  delete container._cancelPdfPreview;
+  previewDisposers.add(dispose);
+
+  const viewer = document.createElement("div");
+  viewer.className = "pdf-preview-viewer";
+  const toolbar = document.createElement("div");
+  toolbar.className = "pdf-preview-toolbar";
+  const previous = document.createElement("button");
+  previous.type = "button";
+  previous.textContent = labels.pdfPreviousPage;
+  previous.setAttribute("aria-label", labels.pdfPreviousPage);
+  const pageIndicator = document.createElement("span");
+  pageIndicator.className = "pdf-preview-page-indicator";
+  const next = document.createElement("button");
+  next.type = "button";
+  next.textContent = labels.pdfNextPage;
+  next.setAttribute("aria-label", labels.pdfNextPage);
+  const zoomOut = document.createElement("button");
+  zoomOut.type = "button";
+  zoomOut.textContent = "−";
+  zoomOut.setAttribute("aria-label", labels.pdfZoomOut);
+  const zoomIn = document.createElement("button");
+  zoomIn.type = "button";
+  zoomIn.textContent = "+";
+  zoomIn.setAttribute("aria-label", labels.pdfZoomIn);
+  const canvasContainer = document.createElement("div");
+  canvasContainer.className = "pdf-preview-canvas-container";
+  const canvas = document.createElement("canvas");
+  canvas.setAttribute("role", "img");
+  canvasContainer.append(canvas);
+  toolbar.append(previous, pageIndicator, next, zoomOut, zoomIn);
+  viewer.append(toolbar, canvasContainer);
+  container.replaceChildren(viewer);
+
+  const renderPage = async () => {
+    if (
+      !container.isConnected ||
+      container.dataset.previewState === "failed"
+    ) return;
+    const generation = ++renderGeneration;
+    if (activeRenderTask) {
+      activeRenderTask.cancel();
+      try {
+        await activeRenderTask.promise;
+      } catch (error) {
+        if (error?.name !== "RenderingCancelledException") throw error;
+      }
+    }
+    if (
+      !container.isConnected ||
+      container.dataset.previewState === "failed" ||
+      generation !== renderGeneration
+    ) return;
+    const pageNumber = currentPage;
+    const zoomLevel = zoom;
+    const page = await pdfDocument.getPage(pageNumber);
+    const availableWidth = Math.max(canvasContainer.clientWidth - 24, 240);
+    const baseViewport = page.getViewport({ scale: 1 });
+    const scale = Math.min(3, (availableWidth / baseViewport.width) * zoomLevel);
+    const viewport = page.getViewport({ scale });
+    const outputScale = Math.min(window.devicePixelRatio || 1, 1.5);
+    const maxCanvasPixels = 16_000_000;
+    const pixelScale = Math.min(
+      outputScale,
+      Math.sqrt(maxCanvasPixels / (viewport.width * viewport.height)),
+    );
+    canvas.width = Math.max(1, Math.floor(viewport.width * pixelScale));
+    canvas.height = Math.max(1, Math.floor(viewport.height * pixelScale));
+    canvas.style.width = `${Math.floor(viewport.width)}px`;
+    canvas.style.height = `${Math.floor(viewport.height)}px`;
+    canvas.setAttribute(
+      "aria-label",
+      `${fileName}, ${labels.pdfPage} ${pageNumber} ${labels.pdfOf} ${pdfDocument.numPages}`,
+    );
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Could not create the PDF preview canvas.");
+    activeRenderTask = page.render({
+      canvasContext: context,
+      viewport,
+      transform:
+        pixelScale === 1
+          ? undefined
+          : [pixelScale, 0, 0, pixelScale, 0, 0],
+    });
+    await activeRenderTask.promise;
+    if (
+      !container.isConnected ||
+      container.dataset.previewState === "failed" ||
+      generation !== renderGeneration
+    ) return;
+    pageIndicator.textContent =
+      `${labels.pdfPage} ${pageNumber} ${labels.pdfOf} ${pdfDocument.numPages}`;
+    previous.disabled = pageNumber <= 1;
+    next.disabled = pageNumber >= pdfDocument.numPages;
+  };
+
+  previous.addEventListener("click", () => {
+    if (currentPage <= 1) return;
+    currentPage -= 1;
+    void renderPage().catch((error) => {
+      if (error?.name === "RenderingCancelledException") return;
+      console.error("Could not render the previous PDF page.", error);
+      renderFallbackDownload(container, fileName, container.dataset.downloadUrl, labels.previewFailed);
+    });
+  });
+  next.addEventListener("click", () => {
+    if (currentPage >= pdfDocument.numPages) return;
+    currentPage += 1;
+    void renderPage().catch((error) => {
+      if (error?.name === "RenderingCancelledException") return;
+      console.error("Could not render the next PDF page.", error);
+      renderFallbackDownload(container, fileName, container.dataset.downloadUrl, labels.previewFailed);
+    });
+  });
+  zoomOut.addEventListener("click", () => {
+    zoom = Math.max(0.5, zoom - 0.25);
+    void renderPage().catch((error) => {
+      if (error?.name === "RenderingCancelledException") return;
+      console.error("Could not zoom the PDF preview out.", error);
+      renderFallbackDownload(container, fileName, container.dataset.downloadUrl, labels.previewFailed);
+    });
+  });
+  zoomIn.addEventListener("click", () => {
+    zoom = Math.min(3, zoom + 0.25);
+    void renderPage().catch((error) => {
+      if (error?.name === "RenderingCancelledException") return;
+      console.error("Could not zoom the PDF preview in.", error);
+      renderFallbackDownload(container, fileName, container.dataset.downloadUrl, labels.previewFailed);
+    });
+  });
+
+  await renderPage();
+  if (container.isConnected && container.dataset.previewState === "pending") {
+    container.dataset.previewState = "rendered";
+  }
+}
+
 async function processFilePreview(fileBlob, fileName, fileType, containerElement, downloadUrl) {
   if (
     !containerElement ||
@@ -543,7 +742,6 @@ async function processFilePreview(fileBlob, fileName, fileType, containerElement
   ) return;
   containerElement.replaceChildren();
   const ext = extensionOf(fileName);
-  const isMobile = isMobilePreviewDevice();
   const previewBlob = fileType && fileBlob.type !== fileType
     ? fileBlob.slice(0, fileBlob.size, fileType)
     : fileBlob;
@@ -576,20 +774,14 @@ async function processFilePreview(fileBlob, fileName, fileType, containerElement
   if (containerElement.dataset.previewState !== "pending") return;
 
   if (["pdf", "docx", "xlsx", "txt", "md"].includes(ext)) {
-    if (isMobile && ext === "pdf") {
-      renderFallbackDownload(containerElement, fileName, downloadUrl, labels.mobilePdfUnsupported);
-      return;
-    }
-
     try {
       if (ext === "pdf") {
-        const blobUrl = URL.createObjectURL(previewBlob);
-        previewObjectUrls.add(blobUrl);
-        const frame = document.createElement("iframe");
-        frame.src = blobUrl;
-        frame.title = labels.previewTitle;
-        frame.referrerPolicy = "no-referrer";
-        containerElement.replaceChildren(frame);
+        containerElement.dataset.downloadUrl = downloadUrl || "";
+        await renderPdfPreview(
+          previewBlob,
+          fileName,
+          containerElement,
+        );
         containerElement.dataset.previewState = "rendered";
         return;
       }
@@ -666,7 +858,21 @@ function addDocumentPreview(download) {
   const existing = result.querySelector("[data-file-preview]");
   if (existing?.dataset.source === download.href) return;
 
-  for (const node of result.querySelectorAll("[data-file-preview]")) node.remove();
+  for (const node of result.querySelectorAll("[data-file-preview]")) {
+    const content = node.querySelector(".document-preview-content");
+    if (content?._disposePdfPreview) {
+      void content._disposePdfPreview().catch((error) => {
+        console.error("Could not release the previous PDF preview.", error);
+      });
+    }
+    node.remove();
+  }
+  for (const dispose of previewDisposers) {
+    void dispose().catch((error) => {
+      console.error("Could not release the PDF preview.", error);
+    });
+  }
+  previewDisposers.clear();
   for (const url of previewObjectUrls) URL.revokeObjectURL(url);
   previewObjectUrls.clear();
   const preview = document.createElement("section");
